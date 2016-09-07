@@ -1,6 +1,9 @@
 package com.omt.webservice.test.unit;
 
 
+import com.omt.webservice.Constants;
+import com.omt.webservice.UtilLibs;
+
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
@@ -27,5 +30,12 @@ public class AppTest extends TestCase
     {
         return new TestSuite( AppTest.class );
     }
-
+    
+    
+    /**
+     * GetCurrentTimeWithTMZ
+     */
+    public void testGetCurrentTimeWithTMZ(){
+		assertNotNull(UtilLibs.GetCurrentTimeWithTMZ(null,"Shanghai"));
+    }
 }

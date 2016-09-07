@@ -9,7 +9,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.instanceOf;
-import static org.hamcrest.Matchers.is;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {AppConfig.class})
@@ -25,9 +24,5 @@ public class MachineLearningTest {
 
         //assert correct type/impl
         assertThat(ml, instanceOf(MachineLearningService.class));
-
-        //assert true
-        assertThat(ml.isValid(""), is(true));
-
     }
 }
