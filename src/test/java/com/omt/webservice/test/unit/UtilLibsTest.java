@@ -92,9 +92,9 @@ public class UtilLibsTest extends TestCase
     /**
      * Testing on downloading files from Moringstar ftp server
      */
-    public void testDownloadFromMs(){
-    	assertTrue(MsSymbolSynThread.updateSymbols());
-    }
+//    public void testDownloadFromMs(){
+//    	assertTrue(MsSymbolSynThread.updateSymbols());
+//    }
     
     /**
      * Check isHoliday
