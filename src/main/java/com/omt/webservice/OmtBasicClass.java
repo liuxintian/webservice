@@ -342,10 +342,10 @@ public abstract class OmtBasicClass {
 			
 			if(flag){
 				Mongo client = new MongoClient("localhost");
-				new MongoTemplate(client, "testdb", null);
+				//new MongoTemplate(client, "testdbTT", null);
 				//UserCredentials credential = new UserCredentials("admin", "admin");
 				//MongoTemplate templateAuth = new MongoTemplate(client, "testdb", credential);
-				MongoTemplate templateAuth = new MongoTemplate(client, "testdb");
+				MongoTemplate templateAuth = new MongoTemplate(client, "testdbTT");
 				if(templateAuth.getCollection(collectionName) != null){
 					templateAuth.dropCollection(collectionName);
 				}
@@ -378,23 +378,23 @@ public abstract class OmtBasicClass {
 			System.out.println("server.sameHost:"+ server.sameHost("localhost"));
 			System.out.println("server.getSocketAddress.getAddress:"+ server.getSocketAddress().getAddress());
 			
-			if(createCollection("QuestionTableOMT")) {
-				return;
-			}
+//			if(createCollection("QuestionTableOMT")) {
+//				return;
+//			}
 			
 			Mongo client = new MongoClient("localhost");
-			new MongoTemplate(client, "testdb", null);
+			MongoTemplate templateAuth = new MongoTemplate(client, "testdb", null);
 			// mongod --auth [ for security reason ]
-			UserCredentials credential = new UserCredentials("admin", "admin");
-			MongoTemplate templateAuth = new MongoTemplate(client, "testdb", credential);
+			//UserCredentials credential = new UserCredentials("admin", "admin");
+			//MongoTemplate templateAuth = new MongoTemplate(client, "testdb", credential);
 			
 			boolean done = false;
 			long startmi = 0;
 			long endmi = 0;
 			String tableName = "";
-			int total = 10000; // one company, all staff 1000, 10 questions/person
+			int total = 10; // one company, all staff 1000, 10 questions/person
 			int count = 10;
-			int skipcount = total - 9000;
+			int skipcount = total - 9;
 			int limit = 100;
 			// MongoTemplate templateNormal = new MongoTemplate(client, "testdb");
 			

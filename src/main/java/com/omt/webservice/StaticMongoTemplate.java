@@ -53,18 +53,18 @@ public class StaticMongoTemplate {
 		Mongo client = null;
 		try{
 			ServerAddress server = StaticMongoTemplate.getTemplateServer();
-			client = new MongoClient(server.getHost(), server.getPort());
+			client = new MongoClient(server.getHost());//, server.getPort());
 			templateAuth = new MongoTemplate(client, dbName);
 		}catch(Exception ex){
 			ex.printStackTrace();
 		}finally{
-			if(client != null){
-				try{
-					client.close();
-				}catch(Exception ex){
-					ex.printStackTrace();
-				}
-			}
+			//			if(client != null){
+			//				try{
+			//					client.close();
+			//				}catch(Exception ex){
+			//					ex.printStackTrace();
+			//				}
+			//			}
 		}
 		return templateAuth;
 	}
@@ -163,6 +163,6 @@ public class StaticMongoTemplate {
 			}
 		}
 		return templateAuth;
-	}	
+	}
 	
 }

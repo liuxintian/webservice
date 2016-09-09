@@ -19,7 +19,10 @@ public class MySuccessHandler implements AuthenticationSuccessHandler {
 	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication)
 			throws IOException, ServletException {
 		// TODO Auto-generated method stub
-        Set<String> roles = AuthorityUtils.authorityListToSet(authentication.getAuthorities());
+		// Allocate session time for specific users
+		//request.getSession().setMaxInactiveInterval(30 * 60);
+        
+		Set<String> roles = AuthorityUtils.authorityListToSet(authentication.getAuthorities());
 		request.getSession().removeAttribute("role");
 		// Administrator
         if (roles.contains(UserDao.roleadmin)){

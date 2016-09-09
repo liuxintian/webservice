@@ -21,11 +21,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.omt.config.StaticConfig;
 import com.omt.config.entity.SysConfigVO;
-import com.omt.webservice.InitSys;
 import com.omt.webservice.RestUriConstant;
 import com.omt.webservice.StaticMongoTemplate;
 import com.omt.webservice.UtilLibs;
 import com.omt.webservice.entity.DataGridModel;
+import com.omt.webservice.listener.InitSys;
 import com.omt.webservice.morningstar.MsSymbolSynThread;
 
 /**
