@@ -6,7 +6,6 @@ import java.util.Date;
 import java.util.List;
 
 import org.bson.types.ObjectId;
-import org.springframework.data.authentication.UserCredentials;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.mongodb.core.CollectionOptions;

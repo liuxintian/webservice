@@ -286,7 +286,7 @@ public class InitSys implements ServletContextListener{
 	}
 	private static void triggerAllClose(){
 		if(priceAllTriggerTask != null){
-			priceAllTriggerTask.stop();;
+			priceAllTriggerTask.stop();
 			priceAllTriggerTask = null;
 		}
 	}

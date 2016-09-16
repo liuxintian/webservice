@@ -6,7 +6,7 @@
 		<title>OMTLogin page</title>
 		<link href="<c:url value='/css/bootstrap.css' />"  rel="stylesheet"></link>
 		<link href="<c:url value='/css/app.css' />" rel="stylesheet"></link>
-		<link href="<c:url value='font-awesome.css' />" rel="stylesheet" />
+		<link href="<c:url value='/css/font-awesome.css' />" rel="stylesheet" />
 	</head>
 	
 <body onload='document.loginForm.username.focus();'>
