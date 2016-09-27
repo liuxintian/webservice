@@ -136,22 +136,22 @@ function saveToDo(){
 </script>
 </head>
 <body><center>
-	<h2>ToDo List</h2>
+	<h2>TODO Management</h2>
 	<form id="fmToDo" method="post" novalidate>
     <div>
-                <label>Content</label>
+                <label>TODO:</label>
                 <input name="content" id="content" class="easyui-textbox" style="width:40%;" data-options="required:true,validType:['length[3,500]'],prompt:'Have a meeting at 10:30AM .'" >
                 <a href="javascript:void(0)" class="easyui-linkbutton c6" iconCls="icon-ok" onclick="saveToDo()" style="width:100px;">Add</a>
    </div>
     </form>
     
-	<table id="dgToDo" title="ToDo Management" class="easyui-datagrid" style="width:95%;height:600px;"
+	<table id="dgToDo" title="TODO LIST" class="easyui-datagrid" style="width:95%;height:600px;"
 			url="<%=request.getContextPath()%>/todo/list" idFiled="id"  
 			pagination="true" rownumbers="true" fitColumns="true" singleSelect="false">
 		<thead>
 			<tr>
 			    <th field="status" data-options="checkbox:true"></th>
-			    <th field="content" width="200">Content</th>
+			    <th field="content" width="200">TODO</th>
 				<th field="timestamp" width="150">Time Stamp</th>
 			</tr>
 		</thead>
