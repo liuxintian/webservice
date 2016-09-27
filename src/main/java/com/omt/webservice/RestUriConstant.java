@@ -132,4 +132,8 @@ public class RestUriConstant {
 	public static final String WSS_SERVER_WEB_TOMCAT7 = "/tomcat7";
 	public static final String WSS_SERVER_WEB_SPRING = "/spring";
 	public static final String WSS_SERVER_WEB_PLUGIN = "/plugin";
+	
+	public static final String WEB_TODO_PAGE = "/todo";
+	public static final String WEB_TODO_EDIT_ALL = "/editall";
+
 }

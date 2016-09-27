@@ -17,7 +17,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.ServletContext;
+
+import org.apache.commons.io.FilenameUtils;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,6 +32,8 @@ import org.springframework.web.multipart.MultipartFile;
 @Controller
 @RequestMapping(value=RestUriConstant.WEB_FILE)
 public class CrunchifyFileUploadController {
+	@Autowired
+    ServletContext context; 
 	
 	private static Logger omtlogger = Logger.getLogger(CrunchifyFileUploadController.class);
 	private static final String UPLOAD_BASE = "/uploaded/";
@@ -41,29 +47,41 @@ public class CrunchifyFileUploadController {
     @ResponseBody
 	public Map<String, String> crunchifySave(@ModelAttribute("uploadForm") CrunchifyFileUpload uploadForm) throws IllegalStateException, IOException {
     	Map<String, String> map = new HashMap<String, String>(); 
-    	String saveDirectory = StaticConfig.filesBasePath + UPLOAD_BASE;
- 
+    	String saveDirectory = context.getRealPath("omtfiles")+UPLOAD_BASE;
+        omtlogger.info("Receive saveDirectory file:"+ saveDirectory);
+    	
+    	File dir = new File(saveDirectory);
+    	if(!dir.exists())
+    	{
+    		dir.mkdirs();
+    	}
+    	
         List<MultipartFile> crunchifyFiles = uploadForm.getFiles();
  
-        List<String> fileNames = new ArrayList<String>();
+        map.put("url", "/css/images/ok.png");
  
         if (null != crunchifyFiles && crunchifyFiles.size() > 0) {
             for (MultipartFile multipartFile : crunchifyFiles) {
  
-                String fileName = multipartFile.getOriginalFilename();
-                omtlogger.info("Receive uploaded file:"+ fileName);
-                if (!"".equalsIgnoreCase(fileName)) {
+                String filename = multipartFile.getOriginalFilename();
+                omtlogger.info("Receive getOriginalFilename file:"+ filename);
+                if (!"".equalsIgnoreCase(filename)) {
                     // Handle file content - multipartFile.getInputStream()
-                    multipartFile.transferTo(new File(saveDirectory + fileName));
-                    fileNames.add(fileName);
+                	
+                	String filenamenew = System.currentTimeMillis() +"."+ FilenameUtils.getExtension(filename);
+                	File temp = new File(saveDirectory + filenamenew);
+                    multipartFile.transferTo(temp);
+                    omtlogger.info("Disk file:"+ filenamenew);
 
-                    // new timer task for parsing and insert
-                    // loadInstrumentForMS(saveDirectory + fileName);
+                    map.put("url", UPLOAD_BASE+filenamenew);
                 }
             }
+            map.put("result", "Successfully upload the file.");
+
+        }else{
+            map.put("result", "Error, no files uploaded.");
         }
  
-        map.put("result", "Successfully upload the file.");
         return map;
     }
     

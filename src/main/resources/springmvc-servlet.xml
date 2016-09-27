@@ -20,6 +20,7 @@
 	<mvc:resources location="/js/" mapping="/js/**"/>
 	<mvc:resources location="/css/" mapping="/css/**"/>
 	<mvc:resources location="/pages/help" mapping="/pages/help/**"/>
+	<mvc:resources location="/omtfiles/uploaded/" mapping="/uploaded/**"/>
  	<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
 		<property name="prefix">
 			<value>/pages/</value>
@@ -29,5 +30,5 @@
 		</property>
 	</bean>	
 	<bean id="mySuccessHandler" class="com.omt.webservice.security.main.controller.MySuccessHandler"/>
-	
+	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver" />
 </beans>

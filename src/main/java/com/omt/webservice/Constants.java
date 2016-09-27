@@ -64,4 +64,7 @@ public class Constants {
 			"-12-27",
 			"-12-30"
 	};
+	
+	public static boolean TODO_LIST_DONE = true;
+	public static boolean TODO_LIST_TODO = false;
 }

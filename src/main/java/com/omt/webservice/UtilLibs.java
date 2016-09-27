@@ -1119,10 +1119,33 @@ public class UtilLibs {
 	}
 	
 	/**
+	 * Get current date time in date format
+	 * @return
+	 */
+	public static Date GetCurrentTime(){
+		String datestr = "";
+		Date dt = null;
+		try{
+			DateFormat dateFormat = null;
+			dateFormat = new SimpleDateFormat(Constants.SYS_TM_FMT);
+	    	Calendar cal = Calendar.getInstance();
+	    	cal.setTimeZone(TimeZone.getDefault());
+	    	datestr = dateFormat.format(cal.getTime());
+	    	dt = dateFormat.parse(datestr);
+		}catch(Exception ex){
+			ex.printStackTrace();
+		}
+    	
+    	return dt;
+	}
+	
+	/**
 	 * Keeping the testing code below
 	 * @param args
 	 */
 	public static void main(String args[]){
+		
+		System.out.println("-----timeaa:"+GetCurrentTime());
 		
 		Double abc = new Double("2.321");
 		Double abcd = new Double("2.321");

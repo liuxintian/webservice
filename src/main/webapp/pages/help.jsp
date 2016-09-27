@@ -33,6 +33,7 @@ function submitForm(){
         success: function(data){
             $('#uploadFrm').form('reset');
             var json_obj = $.parseJSON(data);
+            customImageurl = '<%=request.getContextPath()%>'+json_obj.url;
             $.messager.show({	// show result message
 				title: 'Result',
 				msg: json_obj.result,
@@ -43,12 +44,25 @@ function submitForm(){
 					bottom:''
 				}
 			});
+            loadGraphics();
             $('#uploadBtn').linkbutton({
                 disabled: false
             });
         }
     });
 }
+
+var customImageurl = "<%=request.getContextPath()%>/css/images/ok.png";
+var defaultImageurl = "";
+function loadGraphics(){
+    //v-- will not work! 
+    document.getElementById("loadImage").src = defaultImageurl;
+    //v-- will work given your example conditions
+    document.getElementById("loadImage").src = customImageurl;
+}
+window.onload = function(){
+    loadGraphics();
+};
 </script>
 <body><center>
     <h2>System Manual Documentation</h2>
@@ -70,7 +84,9 @@ function submitForm(){
 		        <div>
 		            <a href="#" id="uploadBtn" class="easyui-linkbutton" style="width:100%" onclick="submitForm()">Upload</a>
 		        </div>
-
+				<div id="loadImage-wrap">
+				    <img id="loadImage" />
+				</div>
 	   	 	</div>
         </form>
         
