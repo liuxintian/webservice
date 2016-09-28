@@ -48,6 +48,10 @@ public class ToDoPageController
     	return "todolist";
 	}
 	
+	@RequestMapping(value=RestUriConstant.WSS_WEB_COMMON_NEW , method = RequestMethod.GET)
+	public String getToDoAdding(HttpServletRequest request) {
+    	return "addtodo";
+	}	
 	/**
      * @Real
 	 * Use this to:

@@ -164,7 +164,7 @@ function displayType(){
 	<form id="fmToDo" method="post" novalidate>
     <div>
          <label>Information:</label>
-         <input name="content" id="content" class="easyui-textbox" style="width:40%;" data-options="required:true,validType:['length[3,500]'],prompt:'Have a meeting at 10:30AM .'" >
+         <input name="content" id="content" class="easyui-textbox" style="width:40%;" data-options="required:true,validType:['length[3,500]'],prompt:''" >
          <a href="javascript:void(0)" class="easyui-linkbutton c6" iconCls="icon-ok" onclick="saveToDo()" style="width:100px;">Add</a>
    </div>
     </form>
