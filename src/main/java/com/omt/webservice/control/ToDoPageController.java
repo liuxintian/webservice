@@ -66,10 +66,41 @@ public class ToDoPageController
 	    return result;
 	}
 	
-	private int TotalCount(int status){
+	@RequestMapping(value=RestUriConstant.WSS_WEB_COMMON_SUBGRID, method=RequestMethod.POST)
+	@ResponseBody
+	public Map<String, Object> queryListFalse(DataGridModel dgm) throws Exception{
+		Map<String, Object> result = new HashMap<String, Object>(2); 
+		List<ToDoList> list = FindByPageFalse(dgm.getPage()-1, dgm.getRows(), Constants.MSG_STATUS_NORMAL);
+		
+		result.put("total", TotalCountFalse(Constants.MSG_STATUS_NORMAL));
+		result.put("rows", list);
+    	omtlogger.trace("Result of queryList size:"+list.size());
+	    return result;
+	}	
+	private int TotalCountFalse(int status){
 		int count = 0;
+		Query query = new Query();
+		query.addCriteria(Criteria.where("content").ne(""));
+		query.addCriteria(Criteria.where("status").is(false));
+		count = (int) StaticMongoTemplate.getStaticMongoTemplate().count(query, ToDoList.class);
+		return count;
+	}
+	
+	private List<ToDoList> FindByPageFalse(int pageNumber, int pageSize, int status) {
+		// TODO Auto-generated method stub
 		 Query query = new Query();
 		 query.addCriteria(Criteria.where("content").ne(""));
+		 query.addCriteria(Criteria.where("status").is(false));
+		 query.with(new Sort(Sort.Direction.DESC, "timestamp"));
+		 query.skip(pageSize * pageNumber);
+		 query.limit(pageSize);
+		 
+		return StaticMongoTemplate.getStaticMongoTemplate().find(query, ToDoList.class);		
+	}	
+	private int TotalCount(int status){
+		int count = 0;
+		Query query = new Query();
+		query.addCriteria(Criteria.where("content").ne(""));
 		count = (int) StaticMongoTemplate.getStaticMongoTemplate().count(query, ToDoList.class);
 		return count;
 	}

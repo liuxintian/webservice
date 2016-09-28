@@ -7,7 +7,7 @@
 <html> 
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>TODO Management</title> 
+<title>Information Management</title> 
 	<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/css/omtcss.css" type="text/css"/>
 	<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/css/easyui.css">
 	<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/css/icon.css">
@@ -127,36 +127,62 @@ function saveToDo(){
 					bottom:''
 				}
 			});
-            $('#content').val('');
+			$('#fmToDo').form('clear');
             $('#dgToDo').datagrid('reload'); 
 		}
 	});	
+}
+var distype = true;
+function displayType(){
+	if(distype){
+		distype = false;
+		$('#displaybtn').linkbutton({
+		    iconCls: 'icon-add',
+		    text:'Show'
+		});
+		$('#dgToDo').datagrid({
+			url:"<%=request.getContextPath()%>/todo/subgrid"
+		});
+		$('#dgToDo').datagrid('reload'); 
+	}else{
+		distype = true;
+		$('#displaybtn').linkbutton({
+		    iconCls: 'icon-remove',
+		    text:'Hide'
+		});
+		$('#dgToDo').datagrid({
+			url:"<%=request.getContextPath()%>/todo/list"
+		});
+		$('#dgToDo').datagrid('reload'); 
+	}
 }
 
 </script>
 </head>
 <body><center>
-	<h2>TODO Management</h2>
+	<h2>Information Management</h2>
 	<form id="fmToDo" method="post" novalidate>
     <div>
-                <label>TODO:</label>
-                <input name="content" id="content" class="easyui-textbox" style="width:40%;" data-options="required:true,validType:['length[3,500]'],prompt:'Have a meeting at 10:30AM .'" >
-                <a href="javascript:void(0)" class="easyui-linkbutton c6" iconCls="icon-ok" onclick="saveToDo()" style="width:100px;">Add</a>
+         <label>Information:</label>
+         <input name="content" id="content" class="easyui-textbox" style="width:40%;" data-options="required:true,validType:['length[3,500]'],prompt:'Have a meeting at 10:30AM .'" >
+         <a href="javascript:void(0)" class="easyui-linkbutton c6" iconCls="icon-ok" onclick="saveToDo()" style="width:100px;">Add</a>
    </div>
     </form>
     
-	<table id="dgToDo" title="TODO LIST" class="easyui-datagrid" style="width:95%;height:600px;"
-			url="<%=request.getContextPath()%>/todo/list" idFiled="id"  
-			pagination="true" rownumbers="true" fitColumns="true" singleSelect="false">
+	<table id="dgToDo" title="Information LIST" class="easyui-datagrid" style="width:95%;height:600px;"
+		url="<%=request.getContextPath()%>/todo/list" idFiled="id" toolbar="#toolbarTodo"
+		pagination="true" rownumbers="true" fitColumns="true" singleSelect="false">
 		<thead>
 			<tr>
 			    <th field="status" data-options="checkbox:true"></th>
-			    <th field="content" width="200">TODO</th>
+			    <th field="content" width="200">Information</th>
 				<th field="timestamp" width="150">Time Stamp</th>
 			</tr>
 		</thead>
 	</table>
-
+	<div id="toolbarTodo">
+		<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-remove" plain="true" onclick="displayType();" id="displaybtn">Hide</a>
+	</div>
 </center>
 </body>
 </html>
