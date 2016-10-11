@@ -66,10 +66,17 @@
 		<logout logout-success-url="/login?logout" />
 		<headers>
 			<header name="X-Token-Valid" value="false"/>
-			<frame-options disabled="true"></frame-options>
+<!-- 			<frame-options policy="DENY"/>-->
+		<frame-options policy="SAMEORIGIN"/>
+		<frame-options policy="ALLOW-FROM" strategy="whitelist" value="http://10.0.0.128:8090/"/>
+		<frame-options policy="ALLOW-FROM" strategy="whitelist" value="https://talktcc.omnimarkettide.com/"/>
+		<frame-options policy="ALLOW-FROM" strategy="whitelist" value="http://10.0.0.102:9090/"/>
+		<frame-options policy="ALLOW-FROM" strategy="whitelist" value="https://query.omnimarkettide.com:15661/"/>
+<!--		<frame-options policy="ALLOW-FROM" strategy="whitelist" value="https://talktcc.omnimarkettide.com/"/>-->	
+<!--  		<frame-options disabled="true"/>-->	
 		</headers>
 
-		<csrf disabled="true"/>
+		<csrf disabled="true"/> 
 	    <logout/>
 	</http>
 
@@ -86,12 +93,12 @@
 		</authentication-provider>
 	</authentication-manager>
 	
-	<bean:bean id="tokenManager" class="com.omt.webservice.security.main.secimpl.TokenManagerSingle"/>
-
-	<bean:bean id="authenticationService" class="com.omt.webservice.security.main.secimpl.AuthenticationServiceDefault"
-		c:authenticationManager-ref="restAuthenticationManager" c:tokenManager-ref="tokenManager"/>
-
 	<bean:bean id="restAuthenticationFilter" class="com.omt.webservice.security.main.restsec.TokenAuthenticationFilter"
 		c:authenticationService-ref="authenticationService" c:logoutLink="/rest"/>
 			
+	<bean:bean id="authenticationService" class="com.omt.webservice.security.main.secimpl.AuthenticationServiceDefault"
+		c:authenticationManager-ref="restAuthenticationManager" c:tokenManager-ref="tokenManager"/>
+
+	<bean:bean id="tokenManager" class="com.omt.webservice.security.main.secimpl.TokenManagerSingle"/>
+
  </bean:beans>
