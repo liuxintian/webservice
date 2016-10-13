@@ -188,6 +188,7 @@ function reloadList(){
 </script>
 </head>
 <body><center>
+	<h2>Meeting List</h2>
 	<table id="dgMeeting" title="Meeting Management" class="easyui-datagrid" style="width:95%;height:600px;"
 			url="<%=request.getContextPath()%>/meetings/list" idFiled="meetingID" 
 			toolbar="#toolbarMeeting" pagination="true" rownumbers="true" fitColumns="true" singleSelect="true">

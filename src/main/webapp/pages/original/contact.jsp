@@ -127,6 +127,7 @@ function deleteContact(){
 </script>
 </head>
 <body><center>
+	<h2>Contact List</h2>
 	<table id="dgContact" title="Contact Management" class="easyui-datagrid" style="width:95%;height:600px;"
 			url="<%=request.getContextPath()%>/contact/list" idFiled="contactID" 
 			toolbar="#toolbarContact" pagination="true" rownumbers="true" fitColumns="true" singleSelect="true">

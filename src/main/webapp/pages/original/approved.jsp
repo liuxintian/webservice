@@ -14,15 +14,13 @@
 	$(document).ready(function(){
 		$(window).resize(function() {
 			$('#dgApproved').datagrid({
-				height:$(window).innerHeight()-global_height_gap
+	    		height:$(window).innerHeight()-100
 			});
 		});
 	    $(function(){
 	    	$('#dgApproved').datagrid({
-	    		height:$(window).innerHeight()-global_height_gap,
+	    		height:$(window).innerHeight()-100,
 	            view: detailview,
-	            pageList:global_pageList,
-	            pageSize:global_pageSize,
 	            detailFormatter:function(index,row){
 	                return '<div class="ddv"></div>';
 	            },
@@ -138,19 +136,7 @@
 	</script>
 </head>
 <body>
-  <div class="container">
-   <%@ include file="/pages/common/common_header.jspf"%>
-   
-   <nav>
-    <a href="<%=request.getContextPath()%>/agm/index">AGM Question List</a>
-    <a href="<%=request.getContextPath()%>/agm/approved" class="visited">AGM Approved List</a>
-    <a href="<%=request.getContextPath()%>/meetings/all">Meeting management</a>
-    <a href="<%=request.getContextPath()%>/stat/index">Data Access History</a>
-    <a href="<%=request.getContextPath()%>/cfg/index">System Configuration</a>
-    <a href="<%=request.getContextPath()%>/logout">Logout</a>
-   </nav>
-   
-   <article id="content">
+	<center><h2>Agm Approved Question List</h2></center>
 	<c:if test="${sessionScope.role == 'ROLE_ADMIN'}">
 	<div style="padding-left:5px;padding-bottom:5px;cursor:hand;">
     <label>Select Company</label>
@@ -211,10 +197,7 @@
     <div id="dlgApproved-buttons" style="text-align: center;">
         <label id="vacApproved" style="display:none;"><a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-vac" style="width:90px;" disabled>VAC</a></label>
         <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-delete" onclick="javascript:deleteMessages(1);" style="width:90px">Delete</a>
-    </div>
-   </article>
-   
-   <%@ include file="/pages/common/common_footer.jspf"%>
-  </div>  
- </body>   
+    </div>        
+</center>
+</body>
 </html>

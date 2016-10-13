@@ -6,70 +6,77 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html> 
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>System Configuration</title> 
-	<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/css/omtcss.css" type="text/css"/>
-	<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/css/easyui.css">
-	<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/css/icon.css">
-	<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/css/color.css">
-	<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/css/demo.css">
-	<script type="text/javascript" src="<%=request.getContextPath()%>/js/jquery-1.9.1.min.js"></script>
-	<script type="text/javascript" src="<%=request.getContextPath()%>/js/jquery.easyui.min.js"></script>
-	<script type="text/javascript" src="<%=request.getContextPath()%>/js/datagrid-detailview.js"></script>
+	<%@ include file="/pages/common/common_meta.jspf"%>
+	<%@ include file="/pages/common/common_jsscripts.jspf"%>
 	
-<script type="text/javascript">
-$(document).ready(function(){
-	$(window).resize(function() {
-		$('#dgSyscfg').datagrid({
-    		height:$(window).innerHeight()-100
+	<script type="text/javascript">
+	$(document).ready(function(){
+		$(window).resize(function() {
+			$('#dgSyscfg').datagrid({
+				height:$(window).innerHeight()-global_height_gap
+			});
 		});
+	    $(function(){
+	    	$('#dgSyscfg').datagrid({
+	    		height:$(window).innerHeight()-global_height_gap,
+	            pageList:global_pageList,
+	            pageSize:global_pageSize,
+	            onClickRow:function(){
+	                var row = $('#dgSyscfg').datagrid('getSelected');
+	                if (row){
+	                    $('#dlgsyscfg').dialog('open').dialog('center').dialog('setTitle','Edit: '+ row.cfgAlias);
+	                    $('#fmCfg').form('load',row);
+	                }
+	            }
+	        });
+	    });
+	    window.setTimeout(reload, 100);
 	});
-    $(function(){
-    	$('#dgSyscfg').datagrid({
-    		height:$(window).innerHeight()-100,
-    		pageList:[50,20,100,200],
-            onClickRow:function(){
-                var row = $('#dgSyscfg').datagrid('getSelected');
-                if (row){
-                    $('#dlgsyscfg').dialog('open').dialog('center').dialog('setTitle','Edit: '+ row.cfgAlias);
-                    $('#fmCfg').form('load',row);
-                }
-            }
-        });
-    });
-    window.setTimeout(reload, 100);
-});
-
-function reload() {
-	$(window).resize(function() {
-		$('#dgSyscfg').datagrid({
-    		height:$(window).innerHeight()-100
+	
+	function reload() {
+		$(window).resize(function() {
+			$('#dgSyscfg').datagrid({
+	    		height:$(window).innerHeight()-100
+			});
 		});
-	});
-	$('#dgSyscfg').datagrid('reload'); 
-}
-
-function saveUser(){
-	 
-	$.messager.confirm('Confirm','Are you sure to submit?',function(r){
-		if (r){
-		    $('#fmCfg').form('submit',{
-		        url: "<%=request.getContextPath()%>/cfg/edit", 
-		        onSubmit: function(){
-		            return $(this).form('validate');
-		        },
-		        success: function(result){
-		    	  	$('#dlgsyscfg').dialog('close');        // close the dialog
-		    	    $('#dgSyscfg').datagrid('reload');    // reload the user data
-		        }
-		    });
-		}
-	});
-}
-</script>
+		$('#dgSyscfg').datagrid('reload'); 
+	}
+	
+	function saveUser(){
+		 
+		$.messager.confirm('Confirm','Are you sure to submit?',function(r){
+			if (r){
+			    $('#fmCfg').form('submit',{
+			        url: "<%=request.getContextPath()%>/cfg/edit", 
+			        onSubmit: function(){
+			            return $(this).form('validate');
+			        },
+			        success: function(result){
+			    	  	$('#dlgsyscfg').dialog('close');        // close the dialog
+			    	    $('#dgSyscfg').datagrid('reload');    // reload the user data
+			        }
+			    });
+			}
+		});
+	}
+	</script>
 </head>
-<body><center>
-	<h2>System Configuration</h2>
+<body>
+  <div class="container">
+   <%@ include file="/pages/common/common_header.jspf"%>
+   
+   <nav>
+    <a href="<%=request.getContextPath()%>/agm/index">AGM Question List</a>
+    <a href="<%=request.getContextPath()%>/agm/approved">AGM Approved List</a>
+    <a href="<%=request.getContextPath()%>/meetings/all">Meeting management</a>
+    <a href="<%=request.getContextPath()%>/stat/index">Data Access History</a>
+    <a href="<%=request.getContextPath()%>/cfg/index" class="visited">System Configuration</a>
+    <a href="<%=request.getContextPath()%>/logout">Logout</a>
+   </nav>
+   
+   <article id="content">
+
 	<table id="dgSyscfg" title="System Configuration [Carefully to edit the values]" class="easyui-datagrid" style="width:95%;height:600px;"
 			url="<%=request.getContextPath()%>/cfg/list" idFiled="id"
 			toolbar="#toolbarSyscfg" pagination="true" rownumbers="true" fitColumns="true" singleSelect="true">
@@ -97,7 +104,11 @@ function saveUser(){
     <div id="dlgsyscfg-buttons" style="text-align: center;">
      	<a href="javascript:void(0)" class="easyui-linkbutton c6" iconCls="icon-ok" onclick="saveUser()" style="width:90px">Save</a>
         <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#dlgsyscfg').dialog('close')" style="width:90px">Cancel</a>
-    </div>        
-</center>
-</body>
+    </div>
+    
+   </article>
+   
+   <%@ include file="/pages/common/common_footer.jspf"%>
+  </div>  
+ </body>   
 </html>

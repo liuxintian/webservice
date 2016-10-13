@@ -1,0 +1,17 @@
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet" type="text/css">
+	<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/css/omtcss.css" type="text/css"/>
+	<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/css/easyui.css"> 
+	<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/css/icon.css">
+	<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/css/color.css">
+	<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/css/demo.css">
+	<script type="text/javascript" src="<%=request.getContextPath()%>/js/jquery-1.9.1.min.js"></script>
+	<script type="text/javascript" src="<%=request.getContextPath()%>/js/jquery.easyui.min.js"></script>
+	<script type="text/javascript" src="<%=request.getContextPath()%>/js/datagrid-detailview.js"></script>
+    <script type="text/javascript">
+    var global_height_gap = 220;
+    
+    var global_pageList = [20,50,100,200];
+    var global_pageSize = 50;
+    
+    </script>
+    

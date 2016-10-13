@@ -6,67 +6,74 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html> 
 <head>
-    <title>OMT-Web Service-Management</title> 
-	<%@ include file="/pages/common/common_meta.jspf"%>
-	<%@ include file="/pages/common/common_jsscripts.jspf"%>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Agm Question List</title> 
+	<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/css/omtcss.css" type="text/css"/>
+	<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/css/easyui.css">
+	<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/css/icon.css">
+	<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/css/color.css">
+	<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/css/demo.css">
+	<script type="text/javascript" src="<%=request.getContextPath()%>/js/jquery-1.9.1.min.js"></script>
+	<script type="text/javascript" src="<%=request.getContextPath()%>/js/jquery.easyui.min.js"></script>
+	<script type="text/javascript" src="<%=request.getContextPath()%>/js/datagrid-detailview.js"></script>
+</head>
 	
 <script type="text/javascript">
-	$(document).ready(function(){
-		$(window).resize(function() {
-			$('#dgAgm').datagrid({
-	    		height:$(window).innerHeight()-global_height_gap
-			});
+$(document).ready(function(){
+	$(window).resize(function() {
+		$('#dgAgm').datagrid({
+    		height:$(window).innerHeight()-100
 		});
-		$(function(){
-	    	$('#dgAgm').datagrid({
-	    		height:$(window).innerHeight()-global_height_gap,
-	            view: detailview,
-	            pageList:global_pageList,
-	            pageSize:global_pageSize,
-	            detailFormatter:function(index,row){
-	                return '<div class="ddvIndex"></div>';
-	            },
-	            onClickRow:function(){
-	                var rows = $('#dgAgm').datagrid('getSelections');
-	                var row = rows[rows.length - 1];
-	                if (row){
-	                    $('#dlgAgm').dialog('open').dialog('center').dialog('setTitle','Question Details From '+row.name);
-	                    $('#dlgAgmNotes').html(row.notes);
-	                    $('#dlgAgmEmail').html(row.email);
-	                    $('#dlgAgmDateTime').html(row.datetime);
-						if(row.vac == null || row.vac == "undefined" || row.vac == ""){
-							$('#vacAgm').hide();
-						}else{
-							$('#vacAgm').show();
-						}
-	                }
-	            },
-	            selectOnCheck: true,
-	            checkOnSelect: true,
-	            onExpandRow: function(index,row){ 
-	                var ddvIndex = $(this).datagrid('getRowDetail',index).find('div.ddvIndex');
-	                ddvIndex.panel({
-	                    border:false,
-	                    cache:true,
-	                    href:'<%=request.getContextPath()%>/agm/finddetails?msgid='+row.id,
-	                    onLoad:function(){
-	                        $('#dgAgm').datagrid('fixDetailRowHeight',index);
-	                        $('#dgAgm').datagrid('selectRow',index);
-	                        $('#dgAgm').datagrid('getRowDetail',index).find('form').form('load',row);
-	                    }
-	                });
-	                $('#dgAgm').datagrid('fixDetailRowHeight',index);
-	            }
-	        });
-	    });
-	    window.setInterval(reload, 30*1000);
-		$('#company').combobox('setValue', '<c:out value="${sessionScope.code}"/>');
 	});
+	$(function(){
+    	$('#dgAgm').datagrid({
+    		height:$(window).innerHeight()-100,
+            view: detailview,
+            detailFormatter:function(index,row){
+                return '<div class="ddvIndex"></div>';
+            },
+            onClickRow:function(){
+                var rows = $('#dgAgm').datagrid('getSelections');
+                var row = rows[rows.length - 1];
+                if (row){
+                    $('#dlgAgm').dialog('open').dialog('center').dialog('setTitle','Question Details From '+row.name);
+                    $('#dlgAgmNotes').html(row.notes);
+                    $('#dlgAgmEmail').html(row.email);
+                    $('#dlgAgmDateTime').html(row.datetime);
+					if(row.vac == null || row.vac == "undefined" || row.vac == ""){
+						$('#vacAgm').hide();
+					}else{
+						$('#vacAgm').show();
+					}
+                }
+            },
+            selectOnCheck: true,
+            checkOnSelect: true,
+            onExpandRow: function(index,row){ 
+                var ddvIndex = $(this).datagrid('getRowDetail',index).find('div.ddvIndex');
+                ddvIndex.panel({
+                    border:false,
+                    cache:true,
+                    href:'<%=request.getContextPath()%>/agm/finddetails?msgid='+row.id,
+                    onLoad:function(){
+                        $('#dgAgm').datagrid('fixDetailRowHeight',index);
+                        $('#dgAgm').datagrid('selectRow',index);
+                        $('#dgAgm').datagrid('getRowDetail',index).find('form').form('load',row);
+                    }
+                });
+                $('#dgAgm').datagrid('fixDetailRowHeight',index);
+            }
+        });
+    });
+    window.setInterval(reload, 30*1000);
+	$('#company').combobox('setValue', '<c:out value="${sessionScope.code}"/>');
+});
 	
 	function reload() {
 		$('#dgAgm').datagrid('reload'); 
 	}
 	
+	// 
 	function approveUser(){
 		var ids = [];
 		var rows = $('#dgAgm').datagrid('getSelections');
@@ -97,6 +104,7 @@
 		
 	}
 	
+	// 
 	function deleteMessages(type){
 		var ids = [];
 		var rows = $('#dgAgm').datagrid('getSelections');
@@ -130,7 +138,21 @@
 		}
 	}
 	
-	function setSessionCode(code){
+function setSessionCode(code){
+	$.ajax({
+		async:true,
+		type:"POST",
+		url: "<%=request.getContextPath()%>/agm/setsessioncode", 
+		data: {code :code},
+		success: function(result) {
+			batchidstr = result;
+			$('#dgAgm').datagrid('reload'); 
+			$("#currentlink").html("Switched to ["+code+"]"); 
+		}
+	});
+}
+function setEmptyCode(code){
+	if(code == ""){
 		$.ajax({
 			async:true,
 			type:"POST",
@@ -141,50 +163,23 @@
 				$('#dgAgm').datagrid('reload'); 
 				$("#currentlink").html("Switched to ["+code+"]"); 
 			}
-		});
+		});		
 	}
-	function setEmptyCode(code){
-		if(code == ""){
-			$.ajax({
-				async:true,
-				type:"POST",
-				url: "<%=request.getContextPath()%>/agm/setsessioncode", 
-				data: {code :code},
-				success: function(result) {
-					batchidstr = result;
-					$('#dgAgm').datagrid('reload'); 
-					$("#currentlink").html("Switched to ["+code+"]"); 
-				}
-			});		
-		}
-	}
-	
-	function logout(){
-		$.messager.confirm('Confirm','Are you sure to logout?',function(r){
-			if(r){
-				location.href = "<%=request.getContextPath()%>/logout";
-			}
-		});
-	}
-</script>
-</head>
+}
 
+function logout(){
+	$.messager.confirm('Confirm','Are you sure to logout?',function(r){
+		if(r){
+			location.href = "<%=request.getContextPath()%>/logout";
+		}
+	});
+}
+
+
+</script>
 <body>
-  <div class="container">
-   <%@ include file="/pages/common/common_header.jspf"%>
-   
-   <nav>
-    <a href="<%=request.getContextPath()%>/agm/index" class="visited">AGM Question List</a>
-    <a href="<%=request.getContextPath()%>/agm/approved">AGM Approved List</a>
-    <a href="<%=request.getContextPath()%>/meetings/all">Meeting management</a>
-    <a href="<%=request.getContextPath()%>/stat/index">Data Access History</a>
-    <a href="<%=request.getContextPath()%>/cfg/index">System Configuration</a>
-    <a href="<%=request.getContextPath()%>/logout">Logout</a>
-   </nav>
-   
-   <article id="content">
-   
-    <c:if test="${sessionScope.role == 'ROLE_ADMIN'}">
+	<center><h2>Agm Question List</h2></center>
+	<c:if test="${sessionScope.role == 'ROLE_ADMIN'}">
 	<div style="padding-left:5px;padding-bottom:5px;cursor:hand;">
     <label>Select Company</label>
     <input id="company" class="easyui-combobox" name="company" required="false" editable="true"  style="cursor:hand;width:260px;"
@@ -205,25 +200,28 @@
 	<label id="currentlink"> </label>
 	</div>
 	</c:if>
-    
-	<table id="dgAgm" class="easyui-datagrid" style="width:100%;height:600px;"
-		url="<%=request.getContextPath()%>/agm/querylist" idFiled="id" 
-		toolbar="#toolbarAgm" pagination="true" rownumbers="true" fitColumns="true" singleSelect="false">
-	<thead>
-		<tr>
-		    <th data-options="field:'ck',checkbox:true"></th>
-		    <th field="name" width="30">Name</th>
-			<th field="email" width="60">Email</th>
-			<th field="datetime" width="50">Date Time</th>
-			<th field="vac" width="50">VAC</th>
-			<th field="notes" width="150">Message</th>
-		</tr>
-	</thead>
+	
+	<center>
+	<table id="dgAgm" title="Questions Management" class="easyui-datagrid" style="width:100%;height:600px;"
+			url="<%=request.getContextPath()%>/agm/querylist" idFiled="id" 
+			toolbar="#toolbarAgm" pagination="true" rownumbers="true" fitColumns="true" singleSelect="false">
+		<thead>
+			<tr>
+			    <th data-options="field:'ck',checkbox:true"></th>
+			    <th field="name" width="30">Name</th>
+				<th field="email" width="60">Email</th>
+				<th field="datetime" width="50">Date Time</th>
+				<th field="vac" width="50">VAC</th>
+				<th field="notes" width="150">Message</th>
+			</tr>
+		</thead>
 	</table>
 	<div id="toolbarAgm">
 		<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-remove" plain="true" onclick="deleteMessages(0)">Remove Selected Message</a>
 		<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-ok" plain="true" onclick="approveUser()">Approve Selected Message</a>
+		<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" plain="true" onclick="logout()">Logout</a>
 	</div>
+	
     <div id="dlgAgm" class="easyui-dialog" style="width:500px;height:280px;"
             closed="true" buttons="#dlgAgm-buttons" data-options="resizable:true,modal:true">
         
@@ -244,10 +242,6 @@
         <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-ok" onclick="javascript:approveUser();" style="width:90px">Approve</a>
         <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-delete" onclick="javascript:deleteMessages(1);" style="width:90px">Delete</a>
     </div>        
-
-   </article>
-   
-   <%@ include file="/pages/common/common_footer.jspf"%>
-  </div>  
- </body>   
+</center>
+</body>
 </html>

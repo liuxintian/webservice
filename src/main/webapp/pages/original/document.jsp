@@ -127,6 +127,7 @@ function deleteDocument(){
 </script>
 </head>
 <body><center>
+	<h2>Document List</h2>
 	<table id="dgDocument" title="Document Management" class="easyui-datagrid" style="width:95%;height:600px;"
 			url="<%=request.getContextPath()%>/document/list" idFiled="documentID" 
 			toolbar="#toolbarDocument" pagination="true" rownumbers="true" fitColumns="true" singleSelect="true">
