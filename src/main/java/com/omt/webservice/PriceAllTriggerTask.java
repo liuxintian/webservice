@@ -3,11 +3,8 @@ package com.omt.webservice;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Hashtable;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -19,7 +16,6 @@ import org.springframework.web.client.RestTemplate;
 
 import com.omt.config.StaticConfig;
 import com.omt.webservice.morningstar.entity.MsSharePrice;
-import com.omt.webservice.morningstar.entity.MsSharePriceOld;
 import com.omt.webservice.morningstar.entity.ShareDataM;
 
 
@@ -60,23 +56,14 @@ public class PriceAllTriggerTask extends TimerTask{
 	private void scanAndProcess(){
 		omtlogger.info("PriceAllTriggerTask start...");
 		// 1. get old data 2. get new data 3. compare the two 4. generate the changed list
-		Hashtable<String, ShareDataM> oldHisPriceHt = findAllOld();
-		Hashtable<String, ShareDataM> newHisPriceHt = findAllNew();
 		List<ShareDataM> changedPriceList = new ArrayList<ShareDataM>();
+		Query query = new Query();
+		query.addCriteria(Criteria.where("dataChangedAll").is(true));
+		List<MsSharePrice> sharePriceList = StaticMongoTemplate.getStaticMongoTemplate().find(query, MsSharePrice.class);
 		
-		if(oldHisPriceHt != null && oldHisPriceHt.size() > 0 && newHisPriceHt != null && newHisPriceHt.size() > 0){
-			Set<String> keys = newHisPriceHt.keySet();
-			Iterator<String> itr = keys.iterator();
-			while (itr.hasNext()) { 
-				String key = itr.next();
-				ShareDataM newValue = newHisPriceHt.get(key);
-				ShareDataM oldValue = oldHisPriceHt.get(key);
-				if(newValue == null || oldValue == null) {
-					continue;
-				}
-				if((!(oldValue.toTriggerString().equals(newValue.toTriggerString())))){
-					changedPriceList.add(newValue);
-				}
+		if(sharePriceList != null){
+			for (MsSharePrice msp: sharePriceList){
+				changedPriceList.add(msp.getData());
 			} 
 		}
 		
@@ -84,6 +71,10 @@ public class PriceAllTriggerTask extends TimerTask{
 		if(changedPriceList != null){
 			omtlogger.info("PriceAllTriggerTask...start with changedPriceList.size():"+changedPriceList.size());
 			RestTempPostData(changedPriceList);
+			
+			Update update = new Update();
+			update.set("dataChangedAll", false);
+			StaticMongoTemplate.getStaticMongoTemplate().updateMulti(query, update, MsSharePrice.class);
 		}
 	}
 	
@@ -104,42 +95,6 @@ public class PriceAllTriggerTask extends TimerTask{
 	    }catch(Exception ex){
 	    	ex.printStackTrace();
 	    }
-	}
-	
-	private Hashtable<String, ShareDataM> findAllNew(){
-		Hashtable<String, ShareDataM> currentHisPriceHt = new Hashtable<String, ShareDataM>();
-		
-		if(StaticConfig.datasource == StaticConfig.DATA_SOURCE_MORNINGSTAR){
-			List<MsSharePrice> result = StaticMongoTemplate.getStaticMongoTemplate().findAll(MsSharePrice.class);
-			if(result != null && result.size() > 0){
-				for(MsSharePrice msg : result){
-					currentHisPriceHt.put(msg.getName(), msg.getData()); 
-				}
-			}
-		}
-			
-		return currentHisPriceHt;
-	}
-	
-	private Hashtable<String, ShareDataM> findAllOld(){
-		Hashtable<String, ShareDataM> currentHisPriceHt = new Hashtable<String, ShareDataM>();
-		
-		if(StaticConfig.datasource == StaticConfig.DATA_SOURCE_MORNINGSTAR){
-			Query query = new Query();
-			query.addCriteria(Criteria.where("datetime").ne(""));
-			List<MsSharePriceOld> result = StaticMongoTemplate.getStaticMongoTemplate().find(query, MsSharePriceOld.class);
-			if(result != null && result.size() > 0){
-				for(MsSharePriceOld msg : result){
-					currentHisPriceHt.put(msg.getName(), msg.getData()); 
-				}
-				
-		    	Update update = new Update();
-				update.set("datetime", "");
-				StaticMongoTemplate.getStaticMongoTemplate().updateMulti(query, update, MsSharePriceOld.class);
-			}
-		}
-
-		return currentHisPriceHt;
 	}
 
 }

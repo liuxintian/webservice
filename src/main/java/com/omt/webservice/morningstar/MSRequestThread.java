@@ -39,7 +39,6 @@ public class MSRequestThread extends TimerTask{
 	public void run() {
 		// TODO Auto-generated method stub
     	if(StaticConfig.logswitcher == 2) omtlogger.info("----- MsUtility before dealing-- queue size is:" + MsUtility.CODES_QUEUE.size() + "--total send count:"+ MsUtility.totalRequestCount);
-        //ThreadPoolExecutor threadPool = new ThreadPoolExecutor(5, 200, 5, TimeUnit.SECONDS, new ArrayBlockingQueue<Runnable>(10), new ThreadPoolExecutor.DiscardOldestPolicy());  
    	
     	if(running || MsUtility.CODES_QUEUE.size() == 0) return;
     	int count = 0;
@@ -49,9 +48,6 @@ public class MSRequestThread extends TimerTask{
     		running = true;
     		try{
     			CompanyList uvo = MsUtility.CODES_QUEUE.take();
-//    			if(uvo.getCode().equalsIgnoreCase("ORA")) {
-//    				omtlogger.info("\n\nTack ORA-----\n\n");
-//    			}
     			companymap.put(uvo.getUniqstr(), uvo);
     			count ++;
     			if(count == 100){
@@ -84,6 +80,5 @@ public class MSRequestThread extends TimerTask{
     	omtlogger.info("Stopping MSRequestThread...");
     	if(timer != null) timer.cancel();
     	needRun = false;
-    	//    	MsUtility.CODES_QUEUE.clear();
     }
 }

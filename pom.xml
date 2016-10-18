@@ -189,49 +189,12 @@
 		    <version>1.30</version>
 		</dependency>
 		
-		<!-- Web socket server [git plugin] -->
-		<dependency>
-		    <groupId>org.java-websocket</groupId>
-		    <artifactId>Java-WebSocket</artifactId>
-		    <version>1.3.0</version>
-		</dependency>	
-		<!-- Web socket server [Spring] -->
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-websocket</artifactId>
-			<version>${spring.framework.version}</version>
-		</dependency>
-		<dependency>
-		    <groupId>org.springframework</groupId>
-		    <artifactId>spring-messaging</artifactId>
-		    <version>${spring.framework.version}</version>
-		</dependency>
-		
-		<!-- Web socket server [Tomcat] 
-		<dependency>
-		    <groupId>org.apache.tomcat</groupId>
-		    <artifactId>tomcat7-websocket</artifactId>
-		    <version>7.0.70</version>
-		    <scope>provided</scope>
-		</dependency>-->
 		<dependency>
 		  <groupId>org.apache.tomcat.maven</groupId>
 		  <artifactId>tomcat7-maven-plugin</artifactId>
 		  <version>2.2</version>
 		  <type>maven-plugin</type>
 		  <scope>provided</scope>
-		</dependency>
-
-		<!-- web jars [Web socket client web pages ]-->
-		<dependency>
-			<groupId>org.webjars</groupId>
-			<artifactId>sockjs-client</artifactId>
-			<version>1.0.2</version>
-		</dependency>
-		<dependency>
-			<groupId>org.webjars</groupId>
-			<artifactId>stomp-websocket</artifactId>
-			<version>2.3.3</version>
 		</dependency>
 
    	</dependencies>

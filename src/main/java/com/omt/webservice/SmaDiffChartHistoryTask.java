@@ -9,7 +9,6 @@ import org.apache.log4j.Logger;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 
-import com.omt.config.StaticConfig;
 import com.omt.webservice.Constants;
 import com.omt.webservice.StaticMongoTemplate;
 import com.omt.webservice.UtilLibs;
@@ -17,8 +16,6 @@ import com.omt.webservice.morningstar.entity.MsChartHistory;
 import com.omt.webservice.morningstar.entity.MsSharePrice;
 import com.omt.webservice.morningstar.entity.SmaPercent;
 import com.omt.webservice.morningstar.entity.SmaResult;
-import com.omt.websocket.entity.HistoryPriceVO;
-import com.omt.websocket.entity.NotifyMessage;
 
 
 public class SmaDiffChartHistoryTask extends TimerTask{
@@ -55,32 +52,6 @@ public class SmaDiffChartHistoryTask extends TimerTask{
 		StaticMongoTemplate.getStaticMongoTemplate().dropCollection(SmaPercent.class);
 		try{
 			omtlogger.info("smaChartHistoryRun start ...");
-			if(StaticConfig.datasource == StaticConfig.DATA_SOURCE_PARITECH){
-				List<HistoryPriceVO> retlist = StaticMongoTemplate.getStaticMongoTemplate().findAll(HistoryPriceVO.class);
-				SmaPercent smapercent = new SmaPercent();
-				for(HistoryPriceVO uvo: retlist){
-					smapercent = new SmaPercent();
-					smapercent.setCode(uvo.getCode());
-					smapercent.setMarket(uvo.getMarket());
-					SmaResult today = new SmaResult();
-			    	NotifyMessage message = findOnePR(uvo);
-		    		if(message != null){
-		    			// If and only if there have today's share price data
-		    			if(message.getDatetime() != null && (UtilLibs.GetCurrentTimeWithTMZ(Constants.SYS_DT_FMT, Constants.SYS_TZ_UTC).equals(message.getDatetime().substring(0, 10)))){
-							today.setClose(message.getData().getClose());
-							today.setOpen(message.getData().getOpen());
-							today.setLow(message.getData().getLow());
-							today.setHigh(message.getData().getHigh());
-							today.setVolume(message.getData().getVolume().doubleValue());
-				    		for(String type: Constants.CHART_REQ_TYPE_LIST){
-								smapercent.setType(type);
-								smapercent.setValue(UtilLibs.createSMADiffForType(uvo.getValue(), type, today));
-								StaticMongoTemplate.getStaticMongoTemplate().insert(smapercent);
-							}
-		    			}
-		    		}
-				}
-			}else{
 				List<MsChartHistory> retlist = StaticMongoTemplate.getStaticMongoTemplate().findAll(MsChartHistory.class);
 				SmaPercent smapercent = new SmaPercent();
 				omtlogger.info("smadiff----retlist.size:"+retlist.size());
@@ -113,20 +84,12 @@ public class SmaDiffChartHistoryTask extends TimerTask{
 		    		}
 				}
 				omtlogger.info("smadiff----count:"+count);
-			}
 		}catch(Exception ex){
 			ex.printStackTrace();
 		}
 		omtlogger.info("smaChartHistoryRun ...End");
 	}
 	
-	private static NotifyMessage findOnePR(HistoryPriceVO entity) {
-		// TODO Auto-generated method stub
-		Query query = new Query();
-		query.addCriteria(Criteria.where("name").is(entity.getCode()));
-		query.addCriteria(Criteria.where("market").is(entity.getMarket()));
-		return (NotifyMessage) StaticMongoTemplate.getStaticMongoTemplate().findOne(query, NotifyMessage.class);   
-	}
 	private static MsSharePrice findOneMS(MsChartHistory entity) {
 		// TODO Auto-generated method stub
 		Query query = new Query();

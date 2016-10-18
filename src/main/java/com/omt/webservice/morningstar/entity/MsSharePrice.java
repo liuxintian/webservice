@@ -18,6 +18,10 @@ public class MsSharePrice {
     
     private String market;
     
+    private boolean dataChangedAll;
+    
+	private boolean dataChangedLast;
+    
     public String getId() {
 		return id;
 	}
@@ -56,6 +60,22 @@ public class MsSharePrice {
 
 	public void setMarket(String market) {
 		this.market = market;
+	}
+
+    public boolean isDataChangedAll() {
+		return dataChangedAll;
+	}
+
+	public void setDataChangedAll(boolean dataChangedAll) {
+		this.dataChangedAll = dataChangedAll;
+	}
+
+	public boolean isDataChangedLast() {
+		return dataChangedLast;
+	}
+
+	public void setDataChangedLast(boolean dataChangedLast) {
+		this.dataChangedLast = dataChangedLast;
 	}
 
 }

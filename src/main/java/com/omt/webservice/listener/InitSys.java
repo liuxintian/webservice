@@ -9,7 +9,6 @@ import org.apache.log4j.Logger;
 import com.omt.asxdata.controller.AsxGetTimerTask;
 import com.omt.config.StaticConfig;
 import com.omt.webservice.Constants;
-import com.omt.webservice.CreateConnTimerTask;
 import com.omt.webservice.LoadCompaniesCSV;
 import com.omt.webservice.PriceAllTriggerTask;
 import com.omt.webservice.PriceTriggerTask;
@@ -24,7 +23,6 @@ import com.omt.webservice.morningstar.UpdateMSChartHistTask;
 import com.omt.websocket.MessageQueueThread;
 import com.omt.websocket.UpdateChartHistTask;
 import com.omt.websocket.WebSocketClient;
-import com.omt.wsserver.gitplugin.WsServer;
 
 /**
  * Desc: System initialize
@@ -41,7 +39,6 @@ public class InitSys implements ServletContextListener{
 	private static PriceTriggerTask priceTriggerTask;
 	private static PriceAllTriggerTask priceAllTriggerTask;
 
-	private static CreateConnTimerTask createConnTimerTask;
 	private static UpdateChartHistTask updateChartHistorytask;
 	private static MessageQueueThread messageQueueThread;
 	
@@ -59,7 +56,6 @@ public class InitSys implements ServletContextListener{
 		// TODO Auto-generated method stub
 		logger.info("ServletContextListener contextDestroyed... start");
 		// release All timerTasks;
-		if(createConnTimerTask != null) createConnTimerTask.stop();
 		if(updateChartHistorytask != null) updateChartHistorytask.stop();
 		if(asxGetTimerTask != null) asxGetTimerTask.stop(); 
 		if(westpacNewsTask != null) westpacNewsTask.stop(); 
@@ -72,8 +68,6 @@ public class InitSys implements ServletContextListener{
 		if(smaChartHistoryTask != null) smaChartHistoryTask.stop();	
 		if(getAllCloseThread != null) getAllCloseThread.stop();	
 
-		// close web socket client
-		WebSocketClient.closeWSClient();
 		// close database connection
 		StaticMongoTemplate.releaseMongoDBTemplate();
 		//--------------------------------------------------------------
@@ -102,8 +96,6 @@ public class InitSys implements ServletContextListener{
 		
 		// T2 initialize Data Source for Morning Star
 		switchDS();
-		
-		initWebSocket();
 		
 		logger.info("initSys contextInitialized.");
 	}
@@ -148,46 +140,6 @@ public class InitSys implements ServletContextListener{
 		}
 	}
 	
-	private static void initParitech(){
-		
-		// P2. create new connections to websocket server
-		if(createConnTimerTask == null){
-			createConnTimerTask = new CreateConnTimerTask(Constants.START_ONE);
-			createConnTimerTask.start();
-		}
-		 
-		// P3. running the delete overdue chart history data
-		if(updateChartHistorytask == null){
-			updateChartHistorytask = new UpdateChartHistTask(Constants.START_TWO);
-			updateChartHistorytask.start();
-		}
-		
-		// P4. run dealing message task
-		if(messageQueueThread == null){
-			messageQueueThread = new MessageQueueThread();
-			messageQueueThread.start();
-		}
-
-	}
-	private static void closeParitech(){
-		if(createConnTimerTask != null){
-			createConnTimerTask.stop();
-			createConnTimerTask = null;
-		}
-		 
-		if(updateChartHistorytask != null){
-			updateChartHistorytask.stop();
-			updateChartHistorytask = null;
-		}
-		
-		if(messageQueueThread != null){
-			messageQueueThread.stop();
-			messageQueueThread = null;
-		}
-
-		WebSocketClient.closeWSClient();
-	}
-	
 	private static void initMorningStar(){
 		
 		//M1 Running task to check current time, then make the decision.
@@ -214,37 +166,10 @@ public class InitSys implements ServletContextListener{
 			getAllCloseThread.start();
 		}
 	}
-	private static void closweMorningstar(){
-		if(daemonTask != null){
-			daemonTask.stop();
-			daemonTask = null;
-		}
-
-		if(updateMSChartHistorytask != null){
-			updateMSChartHistorytask.stop();
-			updateMSChartHistorytask = null;
-		}
-		
-		if(msSymbolSynThread != null){
-			msSymbolSynThread.stop();
-			msSymbolSynThread = null;
-		}
-
-		if(getAllCloseThread != null){
-			getAllCloseThread.stop();
-			getAllCloseThread = null;
-		}
-	}
 
 	public static void switchDS(){
 		logger.info("start switchDS ... with StaticConfig.datasource(PR:1, MS:2):" + StaticConfig.datasource);
-		if(StaticConfig.datasource == StaticConfig.DATA_SOURCE_MORNINGSTAR){
-			closeParitech();
-			initMorningStar();
-		}else{
-			closweMorningstar();
-			initParitech();
-		}
+		initMorningStar();
 		switchTrigger();
 		switchAllTrigger();
 	}
@@ -291,12 +216,6 @@ public class InitSys implements ServletContextListener{
 		}
 	}
 	
-	/**
-	 * Initialize the web socket server;
-	 */
-	private static void initWebSocket(){
-		WsServer.getWssServerInstance();
-	}
 	/**
 	 db.companyList.drop()
 	 db.sysConfigVO.drop()

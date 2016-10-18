@@ -32,10 +32,7 @@ import com.omt.websocket.dao.SocketDaoRepImpl;
 import com.omt.websocket.entity.ChartHistoryVO;
 import com.omt.websocket.entity.CompanyList;
 import com.omt.websocket.entity.HistRequestVO;
-import com.omt.websocket.entity.HistoryPriceVO;
-import com.omt.websocket.entity.NotifyMessage;
 import com.omt.websocket.entity.PriceRequestVO;
-import com.omt.websocket.entity.ShareData;
 import com.omt.websocket.entity.light.LightCHCode;
 import com.omt.websocket.entity.light.LightCHRequest;
 import com.omt.websocket.entity.light.LightCHResponse;
@@ -95,44 +92,6 @@ public class WebSocketController {
 			omtlogger.info("------Share price request with code:"+uvo.getCode());
 			
 			//---------------------------------------------------------------------
-			if(StaticConfig.datasource == StaticConfig.DATA_SOURCE_PARITECH){
-		    	NotifyMessage message = new NotifyMessage();
-	    		message = daoServiceSocket.findOne(uvo.getCode().toUpperCase());
-	    		if(message == null){
-	    			WebSocketClient.synchronizeCompanyList(company);
-	    			try{
-	    				
-	    				int count = 0;
-	    				while(count < StaticConfig.NO_DATA_API_TIMEOUT){
-		    				Thread.sleep(1000);
-		    				message = daoServiceSocket.findOne(uvo.getCode().toUpperCase());
-		    				if(message != null){
-		    					break;
-		    				}
-	    					count ++;
-	    				}
-	    				
-	    			}catch(Exception ex){
-	    				ex.printStackTrace();
-	    			}
-	    		}
-	    		
-	    		if(message != null) {
-	        		message.getData().setCode(uvo.getCode().toUpperCase());
-	        		message.getData().setTimestamp(UtilLibs.ConvertTimeToTMZ(message.getData().getTimestamp(), Constants.SYS_TM_FMT, uvo.getTimezone()));;
-	        		retlist.add(message.getData());
-	        	}else{
-	    			if(StaticConfig.logswitcher == 3){
-						response.sendError(Constants.HTTP_STATUS_420, Constants.ERROR_INFO_420);
-						return null;
-	    			}
-
-	        		message = new NotifyMessage();
-	        		message.setData(new ShareData());
-	        		message.getData().setCode(uvo.getCode().toUpperCase());
-	        		retlist.add(message.getData());
-	        	}
-			}else{
 				MsSharePrice message = MsDao.findOneSharePrice(uvo.getCode().toUpperCase());
 				
 	    		if(message != null) {
@@ -166,8 +125,6 @@ public class WebSocketController {
 			    		}
 					}
 	        	}
-			}
-    		//---------------------------------------------------------------------
        	
     		// --- Log the statistics info START
     		StatisticsUtil.statistics(RestUriConstant.STATIC_SHARE_PRICE_API, 
@@ -204,40 +161,6 @@ public class WebSocketController {
 
 		//---------------------------------------------------------------------
 		String value = "";
-		if(StaticConfig.datasource == StaticConfig.DATA_SOURCE_PARITECH){
-			HistoryPriceVO requestvo = new HistoryPriceVO();
-			requestvo.setCode(code);
-			requestvo.setCount(count);
-			
-			HistoryPriceVO uvo = daoServiceHistory.findRightOne(requestvo);
-			if(uvo != null){
-				value = uvo.getValue();
-			}else{
-				WebSocketClient.synchronizeCompanyList(company);
-    			try{
-    				int second = 0;
-    				while(second < StaticConfig.NO_DATA_API_TIMEOUT){
-	    				Thread.sleep(1000);
-	    				uvo = daoServiceHistory.findRightOne(requestvo);
-	    				if(uvo != null){
-	    					break;
-	    				}
-	    				second ++;
-    				}
-    				
-    				if(uvo != null){
-    					value = uvo.getValue();
-    				}else{
-    	    			if(StaticConfig.logswitcher == 3){
-    						response.sendError(Constants.HTTP_STATUS_420, Constants.ERROR_INFO_420);
-    						return null;
-    	    			}
-    				}
-    			}catch(Exception ex){
-    				ex.printStackTrace();
-    			}
-			}
-		}else{
 			
 			MsChartHistory requestvo = new MsChartHistory();
 			requestvo.setCode(code);
@@ -274,7 +197,6 @@ public class WebSocketController {
 
 				}
 			}
-		}
 		retstr = UtilLibs.createAllItemsForEmpty(value, count, code);
 		//---------------------------------------------------------------------
 		
@@ -312,40 +234,6 @@ public class WebSocketController {
 
 		//---------------------------------------------------------------------
 		String value = "";
-		if(StaticConfig.datasource == StaticConfig.DATA_SOURCE_PARITECH){
-			HistoryPriceVO requestvo = new HistoryPriceVO();
-			requestvo.setCode(code);
-			
-			HistoryPriceVO uvo = daoServiceHistory.findRightOne(requestvo);
-			if(uvo != null){
-				value = uvo.getValue();
-			}else{
-				WebSocketClient.synchronizeCompanyList(company);
-    			try{
-    				int second = 0;
-    				while(second < StaticConfig.NO_DATA_API_TIMEOUT){
-	    				Thread.sleep(1000);
-	    				uvo = daoServiceHistory.findRightOne(requestvo);
-	    				if(uvo != null){
-	    					break;
-	    				}
-	    				second ++;
-    				}
-
-    				if(uvo != null){
-    					value = uvo.getValue();
-    				}else{
-    	    			if(StaticConfig.logswitcher == 3){
-    						response.sendError(Constants.HTTP_STATUS_420, Constants.ERROR_INFO_420);
-    						return null;
-    	    			}
-    				}
-    			}catch(Exception ex){
-    				ex.printStackTrace();
-    			}
-			}
-			retstr = UtilLibs.createAllItemsForType(value, type, code);
-		}else{
 			
 			MsChartHistory requestvo = new MsChartHistory();
 			requestvo.setCode(code);
@@ -380,7 +268,6 @@ public class WebSocketController {
 				}
 			}
 			retstr = UtilLibs.createAllItemsForType(value, type, code);
-		}
 		
 		//---------------------------------------------------------------------
 		// --- Log the statistics info START
@@ -417,18 +304,6 @@ public class WebSocketController {
 		company.setMarket(WebSocketClient.DEFAULT_MARKT);
 
 		String value = "";
-		if(StaticConfig.datasource == StaticConfig.DATA_SOURCE_PARITECH){
-			HistoryPriceVO requestvo = new HistoryPriceVO();
-			requestvo.setCode(code);
-			
-			HistoryPriceVO uvo = daoServiceHistory.findRightOne(requestvo);
-			if(uvo != null){
-				value = uvo.getValue();
-			}else{
-				WebSocketClient.synchronizeCompanyList(company);
-			}
-			retstr = UtilLibs.createSMAForType(value, type);
-		}else{
 			
 			MsChartHistory requestvo = new MsChartHistory();
 			requestvo.setCode(code);
@@ -440,7 +315,6 @@ public class WebSocketController {
 				MsUtility.synchronizeCodeList(company);
 			}
 			retstr = UtilLibs.createSMAForType(value, type);
-		}
 		
     	return retstr;
     }
@@ -470,19 +344,6 @@ public class WebSocketController {
 			company.setMarket(WebSocketClient.DEFAULT_MARKT);
 	
 			String value = "";
-			if(StaticConfig.datasource == StaticConfig.DATA_SOURCE_PARITECH){
-				HistoryPriceVO requestvo = new HistoryPriceVO();
-				requestvo.setCode(code);
-				
-				HistoryPriceVO uvo = daoServiceHistory.findRightOne(requestvo);
-				if(uvo != null){
-					value = uvo.getValue();
-				}else{
-					WebSocketClient.synchronizeCompanyList(company);
-				}
-				retstr = UtilLibs.createSMAForType(value, type);
-				ret.add(retstr);
-			}else{
 				
 				MsChartHistory requestvo = new MsChartHistory();
 				requestvo.setCode(code);
@@ -495,7 +356,6 @@ public class WebSocketController {
 				}
 				retstr = UtilLibs.createSMAForType(value, type);
 				ret.add(retstr);
-			}
 		}
     	return ret;
     }
@@ -518,28 +378,6 @@ public class WebSocketController {
 		
 		SmaResult today = new SmaResult();
 		String value = "";
-		if(StaticConfig.datasource == StaticConfig.DATA_SOURCE_PARITECH){
-	    	NotifyMessage message = new NotifyMessage();
-    		message = daoServiceSocket.findOne(code.toUpperCase());
-    		if(message != null){
-				today.setClose(message.getData().getClose());
-				today.setOpen(message.getData().getOpen());
-				today.setLow(message.getData().getLow());
-				today.setHigh(message.getData().getHigh());
-				today.setVolume(message.getData().getVolume().doubleValue());
-    		}
-    		
-			HistoryPriceVO requestvo = new HistoryPriceVO();
-			requestvo.setCode(code);
-			
-			HistoryPriceVO uvo = daoServiceHistory.findRightOne(requestvo);
-			if(uvo != null){
-				value = uvo.getValue();
-			}else{
-				WebSocketClient.synchronizeCompanyList(company);
-			}
-			retstr = UtilLibs.createSMADiffForType(value, type, today);
-		}else{
 			MsSharePrice message = MsDao.findOneSharePrice(code.toUpperCase());
 			if(message != null){
 				today.setClose(message.getData().getClose());
@@ -559,7 +397,6 @@ public class WebSocketController {
 				MsUtility.synchronizeCodeList(company);
 			}
 			retstr = UtilLibs.createSMADiffForType(value, type, today);
-		}
 
     	return retstr;
     }
@@ -586,29 +423,6 @@ public class WebSocketController {
 			
 			SmaResult today = new SmaResult();
 			String value = "";
-			if(StaticConfig.datasource == StaticConfig.DATA_SOURCE_PARITECH){
-		    	NotifyMessage message = new NotifyMessage();
-	    		message = daoServiceSocket.findOne(code.toUpperCase());
-	    		if(message != null){
-					today.setClose(message.getData().getClose());
-					today.setOpen(message.getData().getOpen());
-					today.setLow(message.getData().getLow());
-					today.setHigh(message.getData().getHigh());
-					today.setVolume(message.getData().getVolume().doubleValue());
-	    		}
-	    		
-				HistoryPriceVO requestvo = new HistoryPriceVO();
-				requestvo.setCode(code);
-				
-				HistoryPriceVO uvo = daoServiceHistory.findRightOne(requestvo);
-				if(uvo != null){
-					value = uvo.getValue();
-				}else{
-					WebSocketClient.synchronizeCompanyList(company);
-				}
-				retstr = UtilLibs.createSMADiffForType(value, type, today);
-				ret.add(retstr);
-			}else{
 				MsSharePrice message = MsDao.findOneSharePrice(code.toUpperCase());
 				if(message != null){
 					today.setClose(message.getData().getClose());
@@ -629,7 +443,6 @@ public class WebSocketController {
 				}
 				retstr = UtilLibs.createSMADiffForType(value, type, today);
 				ret.add(retstr);
-			}
 		}
 
     	return ret;
@@ -668,7 +481,6 @@ public class WebSocketController {
 			resuvo.setExchange(company.getMarket());
 			
 			String value = "";
-			{
 				MsChartHistory requestvo = new MsChartHistory();
 				requestvo.setCode(code);
 				
@@ -705,7 +517,6 @@ public class WebSocketController {
 				resuvo.setValue(UtilLibs.createAllItemsForArray(value, type));
 				ret.add(resuvo);
 			}
-		}
 
     	return ret;
     }

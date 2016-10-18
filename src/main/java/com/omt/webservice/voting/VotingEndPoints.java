@@ -24,7 +24,6 @@ import com.omt.webservice.voting.entity.Votes;
 import com.omt.webservice.voting.entity.VotingJson;
 import com.omt.webservice.voting.entity.VotingUser;
 import com.omt.webservice.voting.entity.WebVotes;
-import com.omt.wsserver.spring.WssController;
 import com.omt.webservice.voting.entity.VotingResult;
 
 /**
@@ -162,8 +161,6 @@ public class VotingEndPoints {
 		result.setResult(VotingConstant.VOTING_SUCCESS);
 		result.setReason(VotingConstant.REASON_NON);
     	
-		//WsServer.broadcast(new Gson().toJson(queryNewsList()));
-		WssController.broadcast(queryNewsList());
     	return result;
 	}
 	

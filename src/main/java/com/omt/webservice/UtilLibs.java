@@ -1139,6 +1139,50 @@ public class UtilLibs {
     	return dt;
 	}
 	
+	public static boolean isChangedLast(ShareDataM oldOne, ShareDataM newOne){
+		return MSGetCalculateValue(oldOne).equals(MSGetCalculateValue(newOne));
+	}
+	
+	
+	/**
+	 * Get the value for calculating
+	 * @param data
+	 * 1:Last, 2:BestBid, 3:BestAsk, 4:Open, 5:Close, 6:High, 7:Low
+	 * @return
+	 */
+	public static String MSGetCalculateValue(ShareDataM data){
+		if(data == null) return null;
+		String ret = "";
+		switch (StaticConfig.TIGGER_FIELD_DEFAUTL){
+		case 1:
+			ret = String.valueOf(data.getLast());
+			break;
+		case 2:
+			ret = String.valueOf(data.getBestBid());
+			break;
+		case 3:
+			ret = String.valueOf(data.getBestAsk());
+			break;
+		case 4:
+			ret = String.valueOf(data.getOpen());
+			break;
+		case 5:
+			ret = String.valueOf(data.getClose());
+			break;
+		case 6:
+			ret = String.valueOf(data.getHigh());
+			break;
+		case 7:
+			ret = String.valueOf(data.getLow());
+			break;
+		default:
+			ret = String.valueOf(data.getLast());
+			break;
+		}
+		return ret;
+	}
+	
+
 	/**
 	 * Keeping the testing code below
 	 * @param args

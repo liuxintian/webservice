@@ -17,8 +17,6 @@ public class StaticConfig {
 	// data source switcher
 	public static int logswitcher = 2;
 	public static int datasource = 2;
-	public static final int DATA_SOURCE_PARITECH = 1;
-	public static final int DATA_SOURCE_MORNINGSTAR = 2;
 	
 	// mail cfg start
 	public static final String MAIL_SWITCHER_ON = "1";

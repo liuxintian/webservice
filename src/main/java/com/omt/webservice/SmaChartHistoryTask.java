@@ -7,13 +7,11 @@ import java.util.TimerTask;
 
 import org.apache.log4j.Logger;
 
-import com.omt.config.StaticConfig;
 import com.omt.webservice.Constants;
 import com.omt.webservice.StaticMongoTemplate;
 import com.omt.webservice.UtilLibs;
 import com.omt.webservice.morningstar.entity.MsChartHistory;
 import com.omt.webservice.morningstar.entity.SmaHistory;
-import com.omt.websocket.entity.HistoryPriceVO;
 
 
 public class SmaChartHistoryTask extends TimerTask{
@@ -50,20 +48,6 @@ public class SmaChartHistoryTask extends TimerTask{
 		StaticMongoTemplate.getStaticMongoTemplate().dropCollection(SmaHistory.class);
 		try{
 			omtlogger.info("smaChartHistoryRun start ...");
-			if(StaticConfig.datasource == StaticConfig.DATA_SOURCE_PARITECH){
-				List<HistoryPriceVO> retlist = StaticMongoTemplate.getStaticMongoTemplate().findAll(HistoryPriceVO.class);
-				SmaHistory smahistory = new SmaHistory();
-				for(HistoryPriceVO uvo: retlist){
-					smahistory = new SmaHistory();
-					smahistory.setCode(uvo.getCode());
-					smahistory.setMarket(uvo.getMarket());
-					for(String type: Constants.CHART_REQ_TYPE_LIST){
-						smahistory.setType(type);
-						smahistory.setValue(UtilLibs.createSMAForType(uvo.getValue(), type));
-						StaticMongoTemplate.getStaticMongoTemplate().insert(smahistory);
-					}
-				}
-			}else{
 				List<MsChartHistory> retlist = StaticMongoTemplate.getStaticMongoTemplate().findAll(MsChartHistory.class);
 				SmaHistory smahistory = new SmaHistory();
 				omtlogger.info("sma----retlist.size:"+retlist.size());
@@ -78,7 +62,6 @@ public class SmaChartHistoryTask extends TimerTask{
 						smahistory.setValue(UtilLibs.createSMAForType(uvo.getValue(), type));
 						StaticMongoTemplate.getStaticMongoTemplate().insert(smahistory);
 					}
-				}
 				omtlogger.info("sma----count:"+count);
 			}
 		}catch(Exception ex){

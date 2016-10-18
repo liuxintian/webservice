@@ -33,7 +33,6 @@ import com.omt.webservice.morningstar.entity.MsSharePrice;
 import com.omt.webservice.morningstar.entity.ShareDataM;
 import com.omt.websocket.WebSocketClient;
 import com.omt.websocket.entity.CompanyList;
-import com.omt.websocket.entity.SharePriceReq;
 import com.omt.websocket.entity.light.LightLastClose;
 
 /**
@@ -96,18 +95,11 @@ public class MsUtility {
 			if(StaticConfig.logswitcher == 2){
 				omtlogger.info("---Morning star getSharePriceVO Request with url:"+ url);
 				omtlogger.info("---Morning star getSharePriceVO Request totalcount:"+ totalRequestCount);
-				//omtlogger.info("---Morning star getSharePriceVO Response body:"+ responseBody);
 			}
 			// Refresh the request Queue based on code and market.
 			for(CompanyList company: codelist){
-				//if( (company.getCode().equalsIgnoreCase(value.getCode()) ) &&  ( company.getMarket().equalsIgnoreCase(value.getMarket()) ) ) 
-				{
 					MsUtility.CODES_QUEUE.add(company);
-				}
 			}
-//			if(url.toString().contains("ORA")){
-//				omtlogger.info("\n\nORA----RSP:"+ responseBody+"\n\n");
-//			}
 			
 	    	if(obj.has("quotes")){
 	    		JSONObject quotes = obj.getJSONObject("quotes");
@@ -119,7 +111,6 @@ public class MsUtility {
 	    		}
 	    		// just parsing
 	    		// else
-	    		{
 		    		if(quotes.has("results")){
 		    			JSONArray resultAry = quotes.getJSONArray("results");
 		    			totalResponseCount += resultAry.length();
@@ -141,25 +132,10 @@ public class MsUtility {
 			    				}
 			    				retUVO.setMarket(market);
 			    				
-			    				// For trigger using start
-			    				{
-				    				SharePriceReq spr = new SharePriceReq();
-				    				spr.setCode(value.getCode());
-				    				spr.setMarket(market);
-				    				MsSharePrice oldone = MsDao.findOneSharePrice(spr);
-				    				if(oldone != null){
-					    				MsDao.updateInsertMsSharePriceOld(oldone);
-				    				}else{
-					    				MsDao.updateInsertMsSharePriceOld(retUVO);
-				    				}
-			    				}
-			    				// For trigger using end
-			    				
 			    				MsDao.updateInsertMsSharePrice(retUVO);
 		    				}
 		    			}
 		    		}
-	    		}
 	    	}
 	    	if(StaticConfig.logswitcher == 2) omtlogger.info("---Morning star getSharePriceVO Response totalcount:"+ totalResponseCount);
 			
@@ -199,7 +175,6 @@ public class MsUtility {
 			ObjectMapper mapper = new ObjectMapper();
 			if(StaticConfig.logswitcher == 2) {
 				omtlogger.info("---Morning star getChartHistory Request with url:"+ url);
-				//omtlogger.info("---Morning star getChartHistory Response body:"+ responseBody);
 			}
 	   	
 			if(obj.has("ts")){
@@ -212,7 +187,6 @@ public class MsUtility {
 		   		}
 				// AAA Just log the error message above, but continuously parsing the results, as there should be some returns for the code list
 				//else
-				{
 		   			if(ts.has("results")){
 		   				JSONArray resultAry = ts.getJSONArray("results");
 		   				MsChartHistory uvo = null;
@@ -245,7 +219,6 @@ public class MsUtility {
 		   					}
 		   				}
 		   			}
-		   		}
 			}
 		}catch(Exception ex){
 			ex.printStackTrace();
@@ -289,7 +262,6 @@ public class MsUtility {
 		   		}
 				// AAA Just log the error message above, but continuously parsing the results, as there should be some returns for the code list
 				//else
-				{
 		   			if(ts.has("results")){
 		   				JSONArray resultAry = ts.getJSONArray("results");
 		   				LightLastClose uvo = null;
@@ -321,7 +293,6 @@ public class MsUtility {
 		   					}
 		   				}
 		   			}
-		   		}
 			}
 		}catch(Exception ex){
 			ex.printStackTrace();

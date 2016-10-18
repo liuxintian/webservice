@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.omt.config.StaticConfig;
 import com.omt.webservice.Constants;
 import com.omt.webservice.RestUriConstant;
 import com.omt.webservice.UtilLibs;
@@ -29,9 +28,6 @@ import com.omt.websocket.dao.SocketDaoRepImpl;
 import com.omt.websocket.entity.ChartHistoryReq;
 import com.omt.websocket.entity.ChartHistoryTypeReq;
 import com.omt.websocket.entity.CompanyList;
-import com.omt.websocket.entity.HistoryPriceVO;
-import com.omt.websocket.entity.NotifyMessage;
-import com.omt.websocket.entity.ShareData;
 import com.omt.websocket.entity.SharePriceReq;
 import com.omt.webservice.morningstar.entity.ShareDataM;
 
@@ -82,30 +78,7 @@ public class MarketRestController {
 			company.setCode(uvo.getCode().toUpperCase());
 			company.setMarket(uvo.getMarket().toUpperCase());
 			//---------------------------------------------------------------------
-			if(StaticConfig.datasource == StaticConfig.DATA_SOURCE_PARITECH){
-		    	NotifyMessage message = new NotifyMessage();
-	    		message = daoServiceSocket.findOne(uvo);
-	    		if(message == null){
-	    			WebSocketClient.synchronizeCompanyList(company);
-	    			try{
-	    				Thread.sleep(2000);
-	    				message = daoServiceSocket.findOne(uvo);
-	    			}catch(Exception ex){
-	    				ex.printStackTrace();
-	    			}
-	    		}
-	    		
-	    		if(message != null) {
-	        		message.getData().setCode(uvo.getCode().toUpperCase());
-	        		message.getData().setTimestamp(UtilLibs.ConvertTimeToTMZ(message.getData().getTimestamp(), Constants.SYS_TM_FMT, uvo.getTimezone()));;
-	        		retlist.add(message.getData());
-	        	}else{
-	        		message = new NotifyMessage();
-	        		message.setData(new ShareData());
-	        		message.getData().setCode(uvo.getCode().toUpperCase());
-	        		retlist.add(message.getData());
-	        	}
-			}else{
+			{
 				MsSharePrice message = MsDao.findOneSharePrice(uvo);
 				
 	    		if(message != null) {
@@ -150,28 +123,7 @@ public class MarketRestController {
 
 		//---------------------------------------------------------------------
 		String value = "";
-		if(StaticConfig.datasource == StaticConfig.DATA_SOURCE_PARITECH){
-			HistoryPriceVO requestvo = new HistoryPriceVO();
-			requestvo.setCode(code.toUpperCase());
-			requestvo.setCount(count);
-			requestvo.setMarket(ruvo.getMarket().toUpperCase());
-			
-			HistoryPriceVO uvo = daoServiceHistory.findMarketOne(requestvo);
-			if(uvo != null){
-				value = uvo.getValue();
-			}else{
-				WebSocketClient.synchronizeCompanyList(company);
-    			try{
-    				Thread.sleep(2000);
-    				uvo = daoServiceHistory.findMarketOne(requestvo);
-    				if(uvo != null){
-    					value = uvo.getValue();
-    				}
-    			}catch(Exception ex){
-    				ex.printStackTrace();
-    			}
-			}
-		}else{
+		{
 			
 			MsChartHistory requestvo = new MsChartHistory();
 			requestvo.setCode(code.toUpperCase());
@@ -217,28 +169,7 @@ public class MarketRestController {
 
 		//---------------------------------------------------------------------
 		String value = "";
-		if(StaticConfig.datasource == StaticConfig.DATA_SOURCE_PARITECH){
-			HistoryPriceVO requestvo = new HistoryPriceVO();
-			requestvo.setCode(code);
-			requestvo.setMarket(market);
-			
-			HistoryPriceVO uvo = daoServiceHistory.findMarketOne(requestvo);
-			if(uvo != null){
-				value = uvo.getValue();
-			}else{
-				WebSocketClient.synchronizeCompanyList(company);
-    			try{
-    				Thread.sleep(2000);
-    				uvo = daoServiceHistory.findMarketOne(requestvo);
-    				if(uvo != null){
-    					value = uvo.getValue();
-    				}
-    			}catch(Exception ex){
-    				ex.printStackTrace();
-    			}
-			}
-			retstr = UtilLibs.createAllItemsForType(value, type, code);
-		}else{
+		{
 			
 			MsChartHistory requestvo = new MsChartHistory();
 			requestvo.setCode(code);

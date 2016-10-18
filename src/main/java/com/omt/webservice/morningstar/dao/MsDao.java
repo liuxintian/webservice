@@ -9,7 +9,6 @@ import com.omt.webservice.StaticMongoTemplate;
 import com.omt.webservice.UtilLibs;
 import com.omt.webservice.morningstar.entity.MsChartHistory;
 import com.omt.webservice.morningstar.entity.MsSharePrice;
-import com.omt.webservice.morningstar.entity.MsSharePriceOld;
 import com.omt.websocket.entity.SharePriceReq;
 import com.omt.websocket.entity.light.LightLastClose;
 
@@ -26,7 +25,23 @@ public class MsDao {
 		query.addCriteria(Criteria.where("name").is(entity.getName()));
 		query.addCriteria(Criteria.where("market").is(entity.getMarket()));
 		
-		StaticMongoTemplate.getStaticMongoTemplate().upsert(query, update, MsSharePrice.class);
+		//{
+		Query queryoo = new Query();
+		queryoo.addCriteria(Criteria.where("name").is(entity.getData().getCode()));
+		queryoo.addCriteria(Criteria.where("market").is(entity.getMarket()));
+		MsSharePrice oldone = StaticMongoTemplate.getStaticMongoTemplate().findOne(queryoo, MsSharePrice.class); 
+		if(oldone != null){
+			if((!(oldone.getData().toTriggerString().equals(entity.getData().toTriggerString())))){
+				update.set("dataChangedAll", true);
+			}
+			if(UtilLibs.isChangedLast(oldone.getData(), entity.getData())) {
+				update.set("dataChangedLast", true);
+			}
+			StaticMongoTemplate.getStaticMongoTemplate().updateFirst(query, update, MsSharePrice.class);
+		}else{
+			StaticMongoTemplate.getStaticMongoTemplate().insert(entity);
+		}
+		//}
 	}	
 
 	public static MsSharePrice findOneSharePrice(String code) {
@@ -41,22 +56,6 @@ public class MsDao {
 		query.addCriteria(Criteria.where("market").is(uvo.getMarket().toUpperCase()));
 		return (MsSharePrice) StaticMongoTemplate.getStaticMongoTemplate().findOne(query, MsSharePrice.class);   
 	}
-
-	/**
-	 * Each time new share price comes update the old collection
-	 * @param entity
-	 */
-	public static void updateInsertMsSharePriceOld(MsSharePrice entity){
-		// TODO Auto-generated method stub
-    	Update update = new Update();
-		update.set("data", entity.getData());
-		update.set("datetime", UtilLibs.GetCurrentTimeWithTMZ(Constants.SYS_TM_FMT, Constants.SYS_TZ_UTC));
-		Query query = new Query();
-		query.addCriteria(Criteria.where("name").is(entity.getName()));
-		query.addCriteria(Criteria.where("market").is(entity.getMarket()));
-		
-		StaticMongoTemplate.getStaticMongoTemplate().upsert(query, update, MsSharePriceOld.class);
-	}	
 
 	//----------------------------------------------------------------------------------------------------------------------------
 	// For chart history
