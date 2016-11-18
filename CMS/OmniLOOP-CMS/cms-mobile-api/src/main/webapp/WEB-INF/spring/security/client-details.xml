@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:oauth="http://www.springframework.org/schema/security/oauth2"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="
+	      http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		  http://www.springframework.org/schema/security/oauth2 http://www.springframework.org/schema/security/spring-security-oauth2.xsd
+		  http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+		  ">
+
+    <oauth:client-details-service id="clientDetailsService">
+        <oauth:client
+                client-id="omt-cms-mobile"
+                secret="omtcms@321"
+                authorized-grant-types="password,refresh_token"
+                authorities="ROLE_MOBILE"
+                access-token-validity="5184000"
+                refresh-token-validity="5184000"
+                scope="read,write"
+          />
+    </oauth:client-details-service>
+
+</beans>

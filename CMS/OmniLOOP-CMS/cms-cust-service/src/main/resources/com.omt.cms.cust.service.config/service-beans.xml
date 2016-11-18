@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:util="http://www.springframework.org/schema/util"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:task="http://www.springframework.org/schema/task"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd		
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+		http://www.springframework.org/schema/util	http://www.springframework.org/schema/util/spring-util.xsd
+		http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd
+		">
+		
+	<context:annotation-config />	
+
+	<context:component-scan base-package="com.omt.cms.cust.service, 
+										  com.omt.cms.core.service 
+										  " /> 
+	
+	<import resource="classpath:/com.omt.cms.cust.data.config/postgres-beans.xml"/>
+	
+	<bean id="mandrillApi" class="com.microtripit.mandrillapp.lutung.MandrillApi">
+		<constructor-arg index="0" value="${mandrill.api_key}" />
+	</bean>
+
+	<bean id="mandrillMessage" class="com.microtripit.mandrillapp.lutung.view.MandrillMessage" scope="prototype">
+		<property name="fromEmail" value="${mandrill.from_email}" />
+		<property name="fromName" value="${mandrill.from_name}" />
+		<property name="mergeLanguage" value="${mandrill.merge_language}" />
+	</bean>
+
+	<bean id="mailMsgFactory" class="com.omt.cms.cust.service.util.MailMessageFactory">
+		<lookup-method name="createMessage" bean="mandrillMessage" />
+	</bean>
+	
+	<bean id="restOps" class="org.springframework.web.client.RestTemplate" />
+	
+</beans>
+
+
+

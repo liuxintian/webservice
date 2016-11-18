@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:security="http://www.springframework.org/schema/security"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                           http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/security
+                           http://www.springframework.org/schema/security/spring-security.xsd">
+
+
+    <security:global-method-security secured-annotations="enabled" />
+    
+    <security:http auto-config="true" >
+    	<security:access-denied-handler error-page="/access-denied" />
+        <security:intercept-url pattern="/assets/**" access="permitAll" />
+        <security:intercept-url pattern="/home" access="permitAll" />
+        <security:intercept-url pattern="/cust-admin/**" access="hasRole('ROLE_SA') or hasRole('ROLE_MA') or hasRole('ROLE_IA')" />
+        <security:form-login  
+        				login-page="/login" 
+        				username-parameter="loginName" 
+        				password-parameter="password"  
+        				default-target-url="/cust-admin/ui/company"
+        				authentication-failure-url="/login?loginError=true"
+        				/>
+        <security:csrf disabled="true"/>
+    </security:http>
+    
+    <security:authentication-manager>
+        <security:authentication-provider ref="imAuthPrv" />
+    </security:authentication-manager>
+
+	<bean id="imAuthPrv" class="com.omt.cms.cust.admin.web.security.InstanceManagerAuthProvider" />
+	
+</beans>
+          

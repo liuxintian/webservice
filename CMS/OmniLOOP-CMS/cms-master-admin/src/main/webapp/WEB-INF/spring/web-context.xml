@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+                           http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/context 
+                           http://www.springframework.org/schema/context/spring-context.xsd
+                           http://www.springframework.org/schema/mvc
+                           http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+
+
+	<import resource="classpath:/com.omt.cms.master.data.config/postgres-beans.xml" />
+	<import
+		resource="classpath:/com.omt.cms.master.service.config/service-beans.xml" />
+	<context:component-scan
+		base-package="com.omt.cms.master.admin,
+					com.omt.cms.file.op,
+					com.omt.cms.master.mobile.rest.oapi" 
+	/>
+
+	<mvc:resources location="/assets/" mapping="/assets/**" />
+
+	<mvc:annotation-driven />
+	<mvc:view-controller path="/" view-name="login" />
+
+	<bean id="viewResolver"
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="viewClass"
+			value="org.springframework.web.servlet.view.JstlView" />
+		<property name="prefix" value="/WEB-INF/jsp/" />
+		<property name="suffix" value=".jsp" />
+	</bean>
+	<beans profile="!prod">
+		<bean class="com.mangofactory.swagger.configuration.SpringSwaggerConfig" />
+	</beans>
+
+</beans>
+             

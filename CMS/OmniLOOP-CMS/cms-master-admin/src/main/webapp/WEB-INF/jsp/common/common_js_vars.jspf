@@ -1,0 +1,437 @@
+    <script>
+        // $(document).ready(function () {
+        //     $(".select2_single").select2({
+        //         placeholder: "Select a state",
+        //         allowClear: true
+        //     });
+            
+        // });
+    /*    
+    _.templateSettings = {
+        evaluate:    /<\$\$([\s\S]+?)\$\$>/g,
+        interpolate: /<\$\$=([\s\S]+?)\$\$>/g,
+        escape:      /<\$\$-([\s\S]+?)\$\$>/g
+    };
+    */
+    // Company Type Attr
+    var companyTypeAttr = {
+        "BDR":"BOARDROOM",
+        "OML":"OMNI LOOP",
+        "WHL":"WHITE LABEL"
+    };
+    
+    /* Url Get Parameter function here */
+    var getUrlParameter = function getUrlParameter(sParam) {
+        var sPageURL = decodeURIComponent(window.location.search.substring(1)),
+            sURLVariables = sPageURL.split('&'),
+            sParameterName,
+            i;
+    
+        for (i = 0; i < sURLVariables.length; i++) {
+            sParameterName = sURLVariables[i].split('=');
+            if (sParameterName[0] === sParam) {
+                return sParameterName[1] === undefined ? true : sParameterName[1];
+            }
+        }
+    };
+
+    $.postJSON = function(url, data, callback) {
+        return jQuery.ajax({
+            'type': 'POST',
+            'url': url,
+            'contentType': 'application/json',
+            'data':JSON.stringify(data, null, ' '),// $.toJSON(data),
+            'dataType': 'json',
+            'success': callback
+        });
+    };
+
+    $.putJSON = function(url, data, callback) {
+        return jQuery.ajax({
+            'type': 'PUT',
+            'url': url,
+            'contentType': 'application/json',
+            'data': data ? JSON.stringify(data, null, ' ') : '',// $.toJSON(data),
+            'dataType': 'json',
+            'success': callback
+        });
+    };
+
+    $.deleteResource = function(url, callback) {
+        return jQuery.ajax({
+            'type': 'PUT',
+            'url': url+'/delete',
+            'contentType': 'application/json',
+            'data':JSON.stringify({}, null, ' '),// $.toJSON(data),
+            'dataType': 'json',
+            'success': callback
+        });
+    };
+    $.putJSON2 = function(url, data, callback) {
+        return jQuery.ajax({
+            'type': 'PUT',
+            'url': url,
+            'contentType': 'application/json',
+            'data': data ? JSON.stringify(data, null, ' ') : '',// $.toJSON(data),
+            'dataType': 'json',
+            'success': callback,
+            'error': callback,
+        });
+    };
+
+    $.putJSONErr = function(url, data, callback, errorclb) {
+        return jQuery.ajax({
+            'type': 'PUT',
+            'url': url,
+            'contentType': 'application/json',
+            'data': data ? JSON.stringify(data, null, ' ') : '',// $.toJSON(data),
+            'dataType': 'json',
+            'success': callback,
+            'error':errorclb
+        });
+    };
+
+    $.getJSONErr = function(url, callback, errorclb) {
+        return jQuery.ajax({
+            'type': 'GET',
+            'url': url,
+            'success': callback,
+            'error':errorclb
+        });
+    };
+
+    var DATE_OUT_FORMAT = "DD/MM/YYYY";//"MM/DD/YYYY";
+
+
+   var FILE_INPUT_STATIC_CONFIG = {
+        showUpload: false,
+        showCaption: false,
+        //fileType: "any",
+        uploadUrl: API_ENDPOINT+'files/upload/common?contextType=img',
+        deleteUrl: API_ENDPOINT+'files/delete',
+        allowedFileExtensions : ['jpg', 'png','gif'],
+        overwriteInitial: false,
+        browseClass: "btn btn-primary btn-lg",
+        uploadExtraData: {
+            contextType: "img"
+        },
+        // deleteExtraData:{
+        //     contextType: "img"
+        // },
+        maxFileSize: 1000,
+        maxFilesNum: 10,
+        //allowedFileTypes: ['image', 'video', 'flash'],
+        // slugCallback: function(filename) {
+        //     return filename.replace('(', '_').replace(']', '_');
+        // }
+    };
+
+
+    var PAGING_VARS = {'first':false,
+                       'prev':false,
+                       'prev_params':'',
+                       'next':true,
+                       'next_params':'',
+                       'last':true,
+                       'last_params':'',
+                       'size':10,
+                       'records':0,//876
+                       'current_page':0,
+                       'sort_by':'',
+                       'query':''};
+
+    var adjustPagingParams = function(chnage){
+
+            PAGING_VARS.current_page = PAGING_VARS.current_page+chnage;
+
+            if(PAGING_VARS.records && !(PAGING_VARS.records % PAGING_VARS.size) && 
+               (PAGING_VARS.current_page >= Math.floor(PAGING_VARS.records/PAGING_VARS.size)) ){
+            	
+            	PAGING_VARS.current_page = PAGING_VARS.current_page - 1;		
+        	}
+
+            if(PAGING_VARS.current_page > 0){
+                
+                PAGING_VARS.first = true;
+                PAGING_VARS.prev  = true;
+
+            }else{
+
+                PAGING_VARS.first = false;
+                PAGING_VARS.prev  = false;
+            }
+
+            if( ( (PAGING_VARS.records % PAGING_VARS.size) && PAGING_VARS.current_page >= Math.floor(PAGING_VARS.records/PAGING_VARS.size)) || 
+                ( PAGING_VARS.records <= PAGING_VARS.size ) ){
+                    PAGING_VARS.next = false;
+                    PAGING_VARS.last = false;  
+            }else if( !(PAGING_VARS.records % PAGING_VARS.size) && (PAGING_VARS.current_page >= Math.floor(PAGING_VARS.records/PAGING_VARS.size)-1) || 
+            		( PAGING_VARS.records <= PAGING_VARS.size ) ){
+                PAGING_VARS.next = false;
+                PAGING_VARS.last = false;              	
+            }else{
+
+                PAGING_VARS.next  = true;
+                PAGING_VARS.last  = true;
+            }
+
+            $(".paging-prev").removeClass('disabled').addClass(function(){
+                return PAGING_VARS.prev ? '' : 'disabled'; 
+            });
+
+            $(".paging-first").removeClass('disabled').addClass(function(){
+                return PAGING_VARS.first ? '' : 'disabled'; 
+            });
+
+            $(".paging-next").removeClass('disabled').addClass(function(){
+                return PAGING_VARS.next ? '' : 'disabled'; 
+            });
+
+            $(".paging-last").removeClass('disabled').addClass(function(){
+                return PAGING_VARS.last ? '' : 'disabled'; 
+            });
+
+            if(PAGING_VARS.records){
+            	
+            	$(".paging-info-count").html('Page '+parseInt(PAGING_VARS.current_page+1)+' of '+Math.ceil(PAGING_VARS.records/PAGING_VARS.size));
+            
+            }else{
+                $(".paging-info-count").html('No records found');
+            }
+            
+    };
+
+    var setUrlForPaging = function(direction){
+        var params = [];
+
+        switch (direction) {
+          case "first":
+            params.push('page='+0);
+            params.push('size='+PAGING_VARS.size);
+            break;
+          case "prev":
+            if(PAGING_VARS.prev){
+                params.push('page='+parseInt(PAGING_VARS.current_page-1,10));
+            }else{
+                return false;   
+            }
+            params.push('size='+PAGING_VARS.size);
+            break;
+          case "next":                        
+            var params = [];
+            if(PAGING_VARS.next){
+                params.push('page='+parseInt(PAGING_VARS.current_page+1,10));
+            }
+            params.push('size='+PAGING_VARS.size);
+            break;
+          case "last":
+            if(PAGING_VARS.last && (PAGING_VARS.records % PAGING_VARS.size) ){
+                params.push('page='+ parseInt(Math.floor(PAGING_VARS.records/PAGING_VARS.size),10) );
+            }else if(PAGING_VARS.last && !(PAGING_VARS.records % PAGING_VARS.size) ){
+            	params.push('page='+ (parseInt(Math.floor(PAGING_VARS.records/PAGING_VARS.size),10)-1) );
+            }
+            params.push('size='+PAGING_VARS.size);
+            break;
+          default:
+            params.push('page='+parseInt(PAGING_VARS.current_page,10));
+            params.push('size='+PAGING_VARS.size);
+        }
+        
+        if(PAGING_VARS.query){
+            params.push('q='+PAGING_VARS.query);
+        }
+
+        if(PAGING_VARS.sort_by){
+            params.push('sort_by='+PAGING_VARS.sort_by);
+        }
+        
+        return params;
+
+    };
+
+
+
+        var createImageUploadContainer = function(fileInputID,fileData){
+
+            $(fileInputID).fileinput('refresh',{
+                showUpload: false,
+                showCaption: false,
+                //fileType: "any",
+                uploadUrl: API_ENDPOINT+'files/upload/common?contextType=img',
+                deleteUrl: API_ENDPOINT+'files/delete',
+                allowedFileExtensions : ['jpg', 'png','gif'],
+                initialPreview: [
+                    '<img src="<%= baseURL %>'+fileData.url+'" class="file-preview-image" alt="Company Teaser Image" title="Company Teaser Image">'
+                ],
+                //initialPreviewShowDelete:true,
+                initialPreviewConfig: [
+                    {caption: fileData.caption || "Company Teaser Image", 
+                     url: API_ENDPOINT+'files/delete', 
+                     key: fileData.url,
+                     extra: function() { 
+                                return {id: $("#id").val()};
+                            }
+                    }
+                ],      
+                overwriteInitial: true,
+                //showPreview:false,
+                //showCaption: false,
+                showUploadedThumbs:true,
+                browseClass: "btn btn-primary btn-lg",
+                uploadExtraData: {
+                    contextType: "img"
+                },
+                // deleteExtraData:{
+                //     contextType: "img"
+                // },
+                maxFileSize: 5000,
+                maxFilesNum: 10,
+                // slugCallback: function(filename) {
+                //     return filename.replace('(', '_').replace(']', '_');
+                // }
+            });
+
+        };
+
+        if (!String.prototype.endsWith) {
+          String.prototype.endsWith = function(searchString, position) {
+              var subjectString = this.toString();
+              if (typeof position !== 'number' || !isFinite(position) || Math.floor(position) !== position || position > subjectString.length) {
+                position = subjectString.length;
+              }
+              position -= searchString.length;
+              var lastIndex = subjectString.indexOf(searchString, position);
+              return lastIndex !== -1 && lastIndex === position;
+          };
+        }
+
+
+        String.prototype.isAlphaNumeric = function() {
+          var regExp = /^[a-z0-9]+$/gi;
+          return (regExp.test(this));
+        };
+
+
+    </script>
+
+    <script>
+    $.fn.modal.Constructor.prototype.enforceFocus = function () {};
+      // ========== Modal issu Code
+      var defaultDateVal = '31/12/2030';
+      var datePlugin = function(){
+        $('input[data-api-attr=validUntil]').daterangepicker({
+          //  minDate: new Date(),
+            showDropdowns: true,
+            locale: {
+                format: DATE_OUT_FORMAT
+            },            
+            singleDatePicker: true,
+            calender_style: "picker_4"
+        }, function (start, end, label) {
+            console.log(start.toISOString(), end.toISOString(), label);
+        });
+      }
+      $(document).ready(function () {
+        var inputValidUntil = $('input[data-api-attr=validUntil].new-date-add');
+        if(inputValidUntil){
+           inputValidUntil.val(defaultDateVal);
+           datePlugin();
+        }
+
+            
+        // =============== Modal not close if your click to outside modal 
+        if($('div.modal[role=dialog]').length){
+            $('div.modal[role=dialog]').modal({
+              backdrop: 'static',
+              keyboard: false,
+              show: false
+            });
+        }
+
+        
+      
+        if($('.resizable_textarea').length){
+            autosize($('.resizable_textarea'));
+        }
+
+        // =============== Email Validation code
+        var blankEmailError = 'Please enter a login name';
+        var wrongEmailError = 'This value should be a valid email.';
+        $('.validateEmail').on('blur', function(){
+            var thisEmail = $(this).val().trim();
+            var emailReg = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/; 
+            if(thisEmail == ''){
+                $(this).addClass('parsley-error');
+                $(this).after('<div class="danger-text">' +blankEmailError+ '</div>');
+            }else if(!emailReg.test(thisEmail)){
+                $(this).addClass('parsley-error');
+                $(this).after('<div class="danger-text">'+wrongEmailError+'</div>');
+                console.log('Email not validate')
+            }else{
+                $(this).removeClass('parsley-error');
+            }
+        });
+        $('.validateEmail').on('focus', function(){
+            $(this).next('.danger-text').remove();
+        });
+      
+      });
+
+       var addStatusUpdateBtn = function(ele,endPoint,payLoad,callbackStatusUpdate){
+            ele.confirmation('destroy');
+            var msg = "Are you sure you want to be activate this record?";
+            if(payLoad.status == 30){
+                msg = "Are you sure you want to be deactivate this record?";
+            }
+            ele.confirmation({
+                title: msg,
+                btnOkClass: 'btn-primary',
+                btnCancelClass : 'btn-default',
+                onConfirm : function(event){
+                    event.preventDefault();
+                    console.log('Yes you confirmation this record');
+                    //$('[data-toggle=confirmation]').confirmation('hide');
+                    if(callbackStatusUpdate){
+                        $.putJSON(endPoint, payLoad, callbackStatusUpdate);
+                    }
+                },
+                onCancel: function(event){
+                    event.preventDefault();
+                    console.log('No you confirmation not this record');
+                }
+            });
+       };
+
+    // ===========
+        function toastNotifications(msg){
+            /*Command: toastr["error"]("fill all mandotory ", "Validation error")
+            toastr.options = {
+              "closeButton": true,
+              "debug": false,
+              "newestOnTop": false,
+              "progressBar": false,
+              "positionClass": "toast-top-center",
+              "preventDuplicates": false,
+              "onclick": null,
+              "showDuration": "300",
+              "hideDuration": "1000",
+              "showEasing": "swing",
+              "hideEasing": "linear",
+              "showMethod": "fadeIn",
+              "hideMethod": "fadeOut"
+            }*/
+            toastr.options.closeButton = true;
+            toastr.options.positionClass = "toast-top-center";
+            toastr.error('', msg || 'Fill in all the mandatory fields!');
+        };
+        $(document).ready(function () {
+
+          $('form.form-validation-notify').each(function (ele){
+            $(this).prop("data-parsley-validate");
+            $(this).parsley().on('form:error', function (formInstance) {
+                toastNotifications(UI_MESSAGES.form_validation_error);
+            });
+          });
+
+        });
+    </script>

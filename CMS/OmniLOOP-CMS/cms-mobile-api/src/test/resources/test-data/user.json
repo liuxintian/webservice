@@ -1,0 +1,18 @@
+{
+  "notes": "First user created after flow change",
+  "tagRole": "USER_ROLE",
+  "loginName": "shiva.kalgudi",
+  "userName": "Shiva Kalgudi",
+  "address": {
+    "addressLine1": "Line1",
+    "addressLine2": "Line2",
+    "addressLine3": "Line3",
+    "addressCity": "Bengaluru",
+    "addressState": "Karnataka",
+    "addressCountry": "India",
+    "addressZip": "560067"
+  },
+  "userContact": "919632211278",
+  "userEmail": "shiva.kalgudi@gmail.com",
+  "password": "welcome"
+}

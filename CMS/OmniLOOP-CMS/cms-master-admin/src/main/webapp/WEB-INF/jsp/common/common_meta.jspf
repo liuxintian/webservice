@@ -1,0 +1,34 @@
+    <%
+        String baseURL = request.getContextPath();
+    %>
+
+    <script>
+
+    var webBaseUrl = '<%= baseURL %>'
+    var CURRENT_ADMIN_USER_ID  = '${user.getUserId()}';
+    //var API_ENDPOINT = 'http://localhost:8080/cms-cust-api/company-instances/'+comInstId+'/';
+    var API_ENDPOINT = webBaseUrl+'/master-admin/api/';
+    var OPEN_API_ENDPOINT = webBaseUrl+'master/oapi/';
+    //http://localhost:8080/cms-master-admin/master/oapi/managers/forgot-password
+    var LOGIN_ENDPOINT = webBaseUrl+'/login';
+    var UI_MESSAGES = {
+        'error_big_logo_upload' : 'You have selected an image for big logo, but have not uploaded it yet, please upload it beforing submitting.',
+        'error_small_logo_upload' : 'You have selected an image for small logo, but have not uploaded it yet, please upload it beforing submitting.',
+        'error_teaser_logo_upload' : 'You have selected an image for teaser image, but have not uploaded it yet, please upload it beforing submitting.',
+        'form_validation_error' : 'Validation error',
+        'success_msg_send' : "To reset your password, follow the instructions in the email we\'ve just sent you",
+        'error_wrong_email' : 'Please provide correct email',
+        'error_pwd' :'Please enter password',
+        'error_pwd_match' : 'Please make sure both the entries of password are same',
+        'success_msg' : 'Your Password has been updated please login. <a href="'+LOGIN_ENDPOINT+'" class="to_register"> Click here </a>',
+        'error_wrong_email_admin' : 'Please enter your registered email for access',
+        'get_api_wrong_response' : 'Opps! something went wrong',
+        'get_api_duplicate_user_name' : 'Opps! something went wrong, may be the account you have tried to add allready exists',
+        'error_instance_exists_name' : 'This instance name is already in use, please try something else',
+        'error_instance_exists_blank' : 'Please enter a valid instance name',
+        'error_instance_name_aplhanum' : 'Please enter a alphanumeric instance name without white spaces and special characters',
+        'error_ticker_blank' : 'Please enter a valid company ticker code',
+        'error_ticker_exists' : 'This company ticker is already in use, please try a code which is unique'
+
+    };
+    </script>

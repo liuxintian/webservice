@@ -1,0 +1,12 @@
+                                <!-- footer content -->
+                <footer>
+                    <div class="">
+                        <p class="pull-right">
+                            <i><span class="lead"> ${user.getCompanyName()}</span></i>
+                            &nbsp;<i class="fa fa-ellipsis-h"></i>&nbsp;
+                            <span>CMS Admin </span>
+                        </p>
+                    </div>
+                    <div class="clearfix"></div>
+                </footer>
+                <!-- /footer content -->

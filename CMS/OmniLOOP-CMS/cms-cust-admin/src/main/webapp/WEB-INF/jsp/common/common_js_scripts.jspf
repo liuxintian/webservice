@@ -1,0 +1,67 @@
+    <script src="<%= baseURL %>/assets/js/bootstrap.min.js"></script>
+	<script src="<%= baseURL %>/assets/js/underscore/underscore-min.js"></script>
+    <!-- chart js -->
+    <script src="<%= baseURL %>/assets/js/chartjs/chart.min.js"></script>
+    <!-- bootstrap progress js -->
+    <script src="<%= baseURL %>/assets/js/progressbar/bootstrap-progressbar.min.js"></script>
+    <script src="<%= baseURL %>/assets/js/nicescroll/jquery.nicescroll.min.js"></script>
+    <!-- icheck -->
+    <script src="<%= baseURL %>/assets/js/icheck/icheck.min.js"></script>
+    <!-- gauge js -->
+    <script type="text/javascript" src="<%= baseURL %>/assets/js/gauge/gauge.min.js"></script>
+    <script type="text/javascript" src="<%= baseURL %>/assets/js/gauge/gauge_demo.js"></script>
+    <!-- daterangepicker -->
+    <script type="text/javascript" src="<%= baseURL %>/assets/js/moment.min2.js"></script>
+    <script src="<%= baseURL %>/assets/js/moment/min/moment.min.js"></script>
+    <script type="text/javascript" src="<%= baseURL %>/assets/js/datepicker/daterangepicker.js"></script>
+    <!-- sparkline -->
+    <script src="<%= baseURL %>/assets/js/sparkline/jquery.sparkline.min.js"></script>
+
+    <script src="<%= baseURL %>/assets/js/custom.js"></script>
+    <!-- skycons -->
+    <script src="<%= baseURL %>/assets/js/skycons/skycons.js"></script>
+
+    <!-- Simple javascript toast notifications -->
+    <script src="<%= baseURL %>/assets/js/toastr.min.js"></script>
+
+    <!-- Simple javascript toast bootstrap confirmation-->
+    <script src="<%= baseURL %>/assets/js/bootstrap-confirmation/bootstrap-tooltip.js" type="text/javascript"></script>
+    <script src="<%= baseURL %>/assets/js/bootstrap-confirmation/bootstrap-confirmation.js" type="text/javascript"></script>
+
+
+
+    <!-- flot js -->
+    <!--[if lte IE 8]><script type="text/javascript" src="/assets/js/excanvas.min.js"></script><![endif]-->
+    <!-- script type="text/javascript" src="<%= baseURL %>/assets/js/flot/jquery.flot.js"></script -->
+    <!-- script type="text/javascript" src="<%= baseURL %>/assets/js/flot/jquery.flot.pie.js"></script -->
+    <!-- script type="text/javascript" src="<%= baseURL %>/assets/js/flot/jquery.flot.orderBars.js"></script -->
+    <!-- script type="text/javascript" src="<%= baseURL %>/assets/js/flot/jquery.flot.time.min.js"></script -->
+    <!-- script type="text/javascript" src="<%= baseURL %>/assets/js/flot/date.js"></script -->
+    <!-- script type="text/javascript" src="<%= baseURL %>/assets/js/flot/jquery.flot.spline.js"></script -->
+    <!-- script type="text/javascript" src="<%= baseURL %>/assets/js/flot/jquery.flot.stack.js"></script -->
+    <!-- script type="text/javascript" src="<%= baseURL %>/assets/js/flot/curvedLines.js"></script -->
+    <!-- script type="text/javascript" src="<%= baseURL %>/assets/js/flot/jquery.flot.resize.js"></script -->
+
+    <!-- script src="<%= baseURL %>/assets/js/moris/raphael-min.js"></script -->
+    <!-- script src="<%= baseURL %>/assets/js/moris/morris.js"></script -->
+
+    <!-- tags -->
+    <script src="<%= baseURL %>/assets/js/tags/jquery.tagsinput.min.js"></script>
+    <!-- switchery -->
+    <script src="<%= baseURL %>/assets/js/switchery/switchery.min.js"></script>
+    <!-- richtext editor -->
+    <script src="<%= baseURL %>/assets/js/editor/bootstrap-wysiwyg.js"></script>
+    <script src="<%= baseURL %>/assets/js/editor/external/jquery.hotkeys.js"></script>
+    <script src="<%= baseURL %>/assets/js/editor/external/google-code-prettify/prettify.js"></script>
+    <!-- select2 -->
+    <script src="<%= baseURL %>/assets/js/select/select2.full.js"></script>
+    <!-- form validation -->
+    <script type="text/javascript" src="<%= baseURL %>/assets/js/parsley/parsley.min.js"></script>
+    <!-- textarea resize -->
+    <script src="<%= baseURL %>/assets/js/textarea/autosize.min.js"></script>
+    <script>
+        autosize($('.resizable_textarea'));
+    </script>
+    <!-- Autocomplete -->
+    <script type="text/javascript" src="<%= baseURL %>/assets/js/autocomplete/countries.js"></script>
+    <script src="<%= baseURL %>/assets/js/autocomplete/jquery.autocomplete.js"></script>

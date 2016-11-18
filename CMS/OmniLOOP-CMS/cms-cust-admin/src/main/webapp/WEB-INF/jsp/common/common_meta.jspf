@@ -1,0 +1,37 @@
+    <%
+    	String baseURL = request.getContextPath();
+	%>
+
+    <script>
+
+    var webBaseUrl = '<%= baseURL %>'
+    var OPEN_API_ENDPOINT = webBaseUrl+'/instance/oapi/';
+    var CURRENT_ADMIN_USER_ID  = '${user.getUserId()}';
+    var CURRENT_ADMIN_MENU  = '${user.getDataMenusJson()}';
+    var comInstId  = '${user.getCompanyId()}';
+    var comInstanceName  = '${user.getCompanyName()}';
+    var API_ENDPOINT = webBaseUrl+'/cust-admin/api/company-instances/'+comInstId+'/';
+    var API_ENDPOINT_CO = webBaseUrl+'/cust-admin/api/companies/'+comInstId;
+    var API_ENDPOINT_DW = webBaseUrl+'/cust-admin/api/company-instances/'+comInstId+'/';
+
+    var DATE_OUT_FORMAT = "DD/MM/YYYY";//"MM/DD/YYYY";
+    var DATE_TIME_OUT_FORMAT = "DD/MM/YYYY h:mm A";//"MM/DD/YYYY h:mm A";
+    var API_ENDPOINT2 = webBaseUrl+'/cust-admin/api/';
+
+    var LOGIN_ENDPOINT = webBaseUrl+'/login';
+    var UI_MESSAGES = {
+        'error_profile_logo_upload' : 'You have selected an image for profile, but have not uploaded it yet, please upload it beforing submitting.',
+        'error_document_logo_upload' :'You have selected an image for document, but have not uploaded it yet, please upload it beforing submitting.',
+        'form_validation_error' : 'Validation error',
+        'success_msg_send' : "To reset your password, follow the instructions in the email we\'ve just sent you",
+        'error_wrong_email' : 'Please provide a valid email address',
+        'error_pwd' :'Please enter your password',
+        'error_pwd_match' : 'Please make sure both entries of password are same',
+        'success_msg' : 'Your Password has been updated now, please login. <a href="'+LOGIN_ENDPOINT+'" class="to_register"> Click here </a>',
+        'error_wrong_email_admin' : 'Please enter your registered email for access',
+        'error_unique_name' : 'Same login name exists in the system please try some other login name',
+        'get_api_wrong_response' : 'Opps! something went wrong',
+        'get_api_duplicate_user_name' : 'Opps! something went wrong, may be the account you have tried to add allready exists.'
+
+    };
+    </script>

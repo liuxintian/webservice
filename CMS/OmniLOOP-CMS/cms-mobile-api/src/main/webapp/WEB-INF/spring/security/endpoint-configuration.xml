@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns:sec="http://www.springframework.org/schema/security"
+
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+	   http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd
+	   ">
+
+
+	<!-- REST API Endpoints Users provisioning -->
+    <sec:http pattern="/mobile/oapi/users/**" create-session="never" authentication-manager-ref="clientAuthenticationManager">
+        <sec:custom-filter ref="resourceServerFilter" before="PRE_AUTH_FILTER"  />
+        <sec:http-basic entry-point-ref="clientAuthenticationEntryPoint"/>
+        <sec:access-denied-handler ref="oauthAccessDeniedHandler"/>
+<!--         <sec:custom-filter ref="corsFilter" after="FIRST"/>
+ -->    </sec:http>
+<!-- 
+    <sec:http pattern="/mobile/api/**" create-session="never" authentication-manager-ref="clientAuthenticationManager">
+        <sec:custom-filter ref="resourceServerFilter" before="PRE_AUTH_FILTER"  />	
+        <sec:http-basic entry-point-ref="clientAuthenticationEntryPoint"/>
+        <sec:access-denied-handler ref="oauthAccessDeniedHandler"/>
+         <sec:intercept-url pattern="/mobile/api/**" access="IS_AUTHENTICATED_FULLY" />
+       	<sec:anonymous enabled="false" />
+        <sec:custom-filter ref="applicationFilter" after="FIRST"/> 
+    </sec:http>
+ -->
+    <!-- User Details Service  -->
+    <sec:http pattern="/me/**" create-session="never" entry-point-ref="oauthAuthenticationEntryPoint">
+ 		<sec:anonymous enabled="false" />
+        <sec:custom-filter ref="resourceServerFilter" before="PRE_AUTH_FILTER"  />
+        <sec:custom-filter ref="applicationFilter" position="LAST"/>
+        <sec:access-denied-handler ref="oauthAccessDeniedHandler"/>
+<!--         <sec:custom-filter ref="corsFilter" after="FIRST"/>
+ -->    </sec:http>
+
+</beans>

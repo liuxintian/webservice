@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+                           http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/context 
+                           http://www.springframework.org/schema/context/spring-context.xsd
+                           http://www.springframework.org/schema/mvc
+                           http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+
+	<import resource="classpath:/com.omt.cms.master.data.config/postgres-beans.xml" />
+	<import
+		resource="classpath:/com.omt.cms.master.service.config/service-beans.xml" />
+
+	<context:component-scan
+		base-package="com.omt.cms.mobile.rest.api, com.omt.cms.mobile.rest.oapi,com.omt.cms.mobile.rest.user.api" />
+
+	<mvc:resources location="/swagger-ui/" mapping="/swagger-ui/**" />
+
+	<bean id="contentNegotiationManager"
+	    class="org.springframework.web.accept.ContentNegotiationManagerFactoryBean">
+	    <property name="favorPathExtension" value="false" />
+	    <property name="favorParameter" value="true" />
+	    <property name="mediaTypes">
+	        <value>
+	            json=application/json
+	        </value>
+	    </property>
+	</bean>
+	
+	<mvc:annotation-driven
+	    content-negotiation-manager="contentNegotiationManager">
+	    <mvc:path-matching suffix-pattern="false" registered-suffixes-only="true" />
+	</mvc:annotation-driven>
+
+	<bean id="objectMapper" class="com.fasterxml.jackson.databind.ObjectMapper">
+		<property name="propertyNamingStrategy">
+			<bean
+				class="com.fasterxml.jackson.databind.PropertyNamingStrategy.LowerCaseWithUnderscoresStrategy" />
+		</property>
+	</bean>
+
+ 
+	<mvc:view-controller path="/index.html" />
+	<beans profile="!prod">
+		<bean class="com.mangofactory.swagger.configuration.SpringSwaggerConfig" />
+	</beans>
+
+</beans>

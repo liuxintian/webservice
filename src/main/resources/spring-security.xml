@@ -41,6 +41,10 @@
 	</http>
 	<http use-expressions="true">
 		<!--<intercept-url pattern="/**" requires-channel="https" />-->
+		<intercept-url pattern="/cms-master-admin/**" access="permitAll"/>
+		<intercept-url pattern="/cms-cust-admin/**" access="permitAll"/>
+		<intercept-url pattern="/cms-cust-api/**" access="permitAll"/>
+		<intercept-url pattern="/cms-mobile-api/**" access="permitAll"/>
 		<intercept-url pattern="/" access="permitAll"/>
 	    <intercept-url pattern="/welcome" access="hasRole('ROLE_ADMIN')"/>
 	    <intercept-url pattern="/asxdata/**" access="permitAll"/>
