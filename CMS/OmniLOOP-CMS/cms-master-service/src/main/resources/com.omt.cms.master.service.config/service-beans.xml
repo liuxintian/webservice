@@ -11,7 +11,7 @@
 		">
 
 	<context:property-placeholder
-		location="classpath:/dev/com.omt.cms.master.data.config/postgres.properties"
+		location="classpath:/${omt.cms.deploy.environment}/com.omt.cms.master.data.config/postgres.properties"
 		ignore-resource-not-found="false" />
 
 	<context:annotation-config />

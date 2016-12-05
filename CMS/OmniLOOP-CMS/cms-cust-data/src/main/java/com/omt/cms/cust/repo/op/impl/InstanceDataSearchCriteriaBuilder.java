@@ -22,7 +22,7 @@ public class InstanceDataSearchCriteriaBuilder {
 	
 	public static String build(FilterCriteriaBO criteria){
 		
-		StringBuilder queryContent = new StringBuilder("SELECT " + selectEntityFields(criteria.entityName) + " FROM company_instances instance, " + criteria.entityName + " entity WHERE instance.status=20 AND instance.id=entity.company_id AND ");
+		StringBuilder queryContent = new StringBuilder("SELECT entity.* FROM company_instances instance, " + criteria.entityName + " entity WHERE instance.status=20 AND instance.id=entity.company_id AND ");
 		String operator = StringUtils.EMPTY;
 
 		if(criteria.cpId!=null){
@@ -108,6 +108,8 @@ public class InstanceDataSearchCriteriaBuilder {
 					+ "entity.announcement_type, "
 					+ "entity.document_Link, "
 					+ "entity.document_title, "
+					+ "entity.active, "
+					+ "entity.total, "
 					+ "entity.is_price_sensitive ";	
 		}else if(StringUtils.equals(entity, KeyDateOperations.ENTITY_TABLE_NAME)){
 			return "entity.id, "
@@ -127,6 +129,8 @@ public class InstanceDataSearchCriteriaBuilder {
 					+ "entity.event_details, "
 					+ "entity.key_date_type, "
 					+ "entity.event_full_day, "
+					+ "entity.active, "
+					+ "entity.total, "
 					+ "entity.event_range ";
 		}else if(StringUtils.equals(entity, DocumentLinksMediaOperations.ENTITY_TABLE_NAME)){
 			return "entity.id, "
@@ -144,6 +148,8 @@ public class InstanceDataSearchCriteriaBuilder {
 					+ "entity.doc_thumbnail, "
 					+ "entity.doc_url, "
 					+ "entity.doc_note, "
+					+ "entity.active, "
+					+ "entity.total, "
 					+ "entity.doc_type";
 		}else{
 			return "*";

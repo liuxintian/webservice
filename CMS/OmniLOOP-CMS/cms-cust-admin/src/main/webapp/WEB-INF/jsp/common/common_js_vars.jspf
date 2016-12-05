@@ -65,7 +65,7 @@
 
     $.fn.modal.Constructor.prototype.enforceFocus = function () {};
 
-
+    var domainName = window.location.origin+"/"+webBaseUrl;
    var FILE_INPUT_STATIC_CONFIG = {
         showUpload: false,
         showCaption: false,

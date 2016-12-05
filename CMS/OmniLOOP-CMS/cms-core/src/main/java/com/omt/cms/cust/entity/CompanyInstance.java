@@ -47,6 +47,10 @@ public class CompanyInstance implements Serializable{
 	@Size(max=255)
 	private String companyName;
 
+	@Column(name="active", nullable = true)
+	private Boolean active = true; 
+
+
 	public CompanyInstance(){
 		super();
 		Timestamp now = new Timestamp(System.currentTimeMillis());

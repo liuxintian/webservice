@@ -102,7 +102,7 @@
 
     var DATE_OUT_FORMAT = "DD/MM/YYYY";//"MM/DD/YYYY";
 
-
+    var domainName = encodeURIComponent(window.location.origin+"/"+webBaseUrl);
    var FILE_INPUT_STATIC_CONFIG = {
         showUpload: false,
         showCaption: false,

@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.omt.cms.core.common.SystemCodes.RecordStatus;
@@ -35,7 +36,15 @@ public class CompanyServiceImpl implements CompanyService {
 	
 	@Autowired private CompanyOperations cpOp;
 	@Autowired private CompanyMapper mapper;
+	@Value("${master.admin.cms.url}") private String prefix;
+	public String getPrefix() {
+		return prefix;
+	}
 
+	public void setPrefix(String prefix) {
+		this.prefix = prefix;
+	}
+	
 	@Override
 	public ServiceResponse read(ServiceRequest request) {
 		boolean result = false;
@@ -145,6 +154,8 @@ public class CompanyServiceImpl implements CompanyService {
 		try {			
 			List<Company> cpList = cpOp.findByStatus(RecordStatus.ACTIVE.getValue());
 			for (Company cpEnt : cpList) {
+				cpEnt = AddPrefix(cpEnt);
+				
 				CompanyBO cpBO = mapper.fromEntityToBO(cpEnt);
 				cpBOList.add(cpBO);
 			}
@@ -188,6 +199,7 @@ public class CompanyServiceImpl implements CompanyService {
 				Company cpEnt = cpOp.findById(cpId);
 				resultCode = ServiceResultCodes.RECORD_NOT_FOUND.getValue();
 				if(cpEnt!=null && cpEnt.isActive()){
+					cpEnt = AddPrefix(cpEnt);
 					
 					result = true;
 					resultCode = ServiceResultCodes.OPERATION_SUCCESS.getValue();
@@ -212,6 +224,8 @@ public class CompanyServiceImpl implements CompanyService {
 				Company cpEnt = cpOp.findByCompanyTicker(asxCode.toLowerCase());
 				resultCode = ServiceResultCodes.RECORD_NOT_FOUND.getValue();
 				if(cpEnt!=null){
+					cpEnt = AddPrefix(cpEnt);
+					
 					cpRslt = mapper.fromEntityToBO(cpEnt);
 					result = true;
 					resultCode = ServiceResultCodes.RECORD_FOUND.getValue();
@@ -261,6 +275,8 @@ public class CompanyServiceImpl implements CompanyService {
 				cpList = cpOp.findByStatus(stsActive);
 			}
 			for (Company cpEnt : cpList) {
+				cpEnt = AddPrefix(cpEnt);
+				
 				CompanyBO cpBO = mapper.fromEntityToBO(cpEnt);
 				cpBOList.add(cpBO);
 			}
@@ -292,6 +308,8 @@ public class CompanyServiceImpl implements CompanyService {
 	
 	private void convertToBOList(List<CompanyBO> compBOList, List<Company> compList) {
 		for (Company compEnt : compList) {
+			compEnt = AddPrefix(compEnt);
+			
 			CompanyBO compBO = mapper.fromEntityToBO(compEnt);
 			compBOList.add(compBO);
 		}
@@ -301,6 +319,8 @@ public class CompanyServiceImpl implements CompanyService {
 	private void convertToBOList(List<CompanyBO> compBOList, List<Company> compList, Long total) {
 		boolean addTotal = true;
 		for (Company compEnt : compList) {
+			compEnt = AddPrefix(compEnt);
+			
 			CompanyBO compBO = mapper.fromEntityToBO(compEnt);
 			if(addTotal){
 				compBO.setTotal(total);
@@ -334,6 +354,21 @@ public class CompanyServiceImpl implements CompanyService {
 		response.getServiceResult().setResultMessage(resultMsg);
 		response.addResponseData(respList);
 		return response;
+	}
+	
+	private Company AddPrefix(Company company){
+		if(company != null){
+			if(company.getCompanyLogoBig() != null && company.getCompanyLogoBig().length() > 0){
+				company.setCompanyLogoBig(prefix + company.getCompanyLogoBig());
+			}
+			if(company.getCompanyLogoSmall() != null && company.getCompanyLogoSmall().length() > 0){
+				company.setCompanyLogoSmall(prefix + company.getCompanyLogoSmall());
+			}
+			if(company.getCompanyTeaser() != null && company.getCompanyTeaser().length() > 0){
+				company.setCompanyTeaser(prefix + company.getCompanyTeaser());
+			}
+		}
+		return company;
 	}
 	
 }

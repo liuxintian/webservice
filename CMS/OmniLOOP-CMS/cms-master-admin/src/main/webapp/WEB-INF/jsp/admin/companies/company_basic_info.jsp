@@ -421,16 +421,6 @@ var updateCompanyForm = function(){
 	var companyAttrs = ['companyName','country','companyURL','companyEmail','companyTicker','notes','companyDescription','status','companyShareholders','companySize','sector','industry','subIndustry','companyLogoBig','companyLogoSmall','companyTeaser','isRegistered','shareRegistryId','companyType','tagRole'];
     var dataString = {};
 
-   _.each(companyAttrs, function(key){
-        if(key == 'status'){
-            dataString[key] =  $('.form-control[data-api-attr='+key+']:checked').val();    
-        }else if(key == 'isRegistered'){
-            dataString[key] =  $('#isRegistered [data-api-attr='+key+']:checked').val();    
-        }else{
-            dataString[key] =  $('.form-control[data-api-attr='+key+']').val();    
-        }
-   });
-
         
     var imgCompayLogoBig = $('input#file-clogo-bg').val();
     var imgCompanyLogoSmall = $('input#file-clogo-sm').val();
@@ -451,6 +441,17 @@ var updateCompanyForm = function(){
         else{
             //
         }
+        
+        _.each(companyAttrs, function(key){
+            if(key == 'status'){
+                dataString[key] =  $('.form-control[data-api-attr='+key+']:checked').val();    
+            }else if(key == 'isRegistered'){
+                dataString[key] =  $('#isRegistered [data-api-attr='+key+']:checked').val();    
+            }else{
+                dataString[key] =  $('.form-control[data-api-attr='+key+']').val();    
+            }
+       });
+
 
    var formValidate = $('#company-add-form').parsley().validate();
    var errorExists  = $('#company-add-form').find('.danger-text').length ? true : false;
@@ -642,13 +643,13 @@ var putCompanyFormCallback = function(data){
                //var companyAttrs = ['companyName','country','companyURL','notes','companyDescription','status','companyShareholders','companySize','shareRegistryId','sector','industry','subIndustry','companyLogoBig','companyLogoSmall','companyTeaser','validUntil'];
                var companyAttrs = ['companyName','country','companyURL','companyEmail','companyTicker','notes','companyDescription','status','companyShareholders','companySize','sector','industry','subIndustry','companyLogoBig','companyLogoSmall','companyTeaser','isRegistered','shareRegistryId','companyType','tagRole'];
                var dataString = {};
-
+			
                _.each(companyAttrs, function(key){
                     if(key == 'status'){
                         dataString[key] =  $('.form-control[data-api-attr='+key+']:checked').val();    
                     }else if(key == 'isRegistered'){
                         dataString[key] =  $('#isRegistered [data-api-attr='+key+']:checked').val();    
-                    }else{
+                     }else{
                         dataString[key] =  $('.form-control[data-api-attr='+key+']').val();
                     }
                });

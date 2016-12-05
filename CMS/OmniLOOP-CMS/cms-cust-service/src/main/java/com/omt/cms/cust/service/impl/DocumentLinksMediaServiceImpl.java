@@ -6,6 +6,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.omt.cms.core.service.base.FilterCriteriaBO;
@@ -26,7 +27,17 @@ public class DocumentLinksMediaServiceImpl implements DocumentLinksMediaService 
 	@Autowired CompanyInstanceOperations<CompanyInstance> ciOps;
 	@Autowired DocumentLinksMediaOperations dlmOps;
 	@Autowired DocumentLinksMediaMapper mapper;
+	
+	@Value("${cms.instance.admin.url}") private String instanceAdminAppUrl;
 
+	public String getInstanceAdminAppUrl() {
+		return instanceAdminAppUrl;
+	}
+
+	public void setInstanceAdminAppUrl(String masterAdminAppUrl) {
+		this.instanceAdminAppUrl = masterAdminAppUrl;
+	}
+	
 	@Override
 	public ServiceResponse readAll(ServiceRequest request) {
 		boolean result = false;
@@ -38,7 +49,7 @@ public class DocumentLinksMediaServiceImpl implements DocumentLinksMediaService 
 			resultCode = ServiceResultCodes.RECORD_NOT_FOUND.getValue();
 				if(company!=null){
 					resultCode = ServiceResultCodes.RECORD_INACTIVE.getValue();
-					if(company.isActive()){
+					if(company.isActive()) {
 						//List<DocumentLinksMedia> exList = dlmOps.findByCompany(company);
 						List<DocumentLinksMedia> exList = dlmOps.findByFiltersAdmins(company, reqBO);
 						Long total = dlmOps.countByFiltersAdmins(company, reqBO);
@@ -55,6 +66,10 @@ public class DocumentLinksMediaServiceImpl implements DocumentLinksMediaService 
 
 	private void convertToBOList(List<DocumentLinksMediaBO> resDlmList, List<DocumentLinksMedia> exList) {
 		for(DocumentLinksMedia dlm:exList){
+			if(dlm.getDocThumbnail() != null && dlm.getDocThumbnail().length() > 0){
+				dlm.setDocThumbnail(instanceAdminAppUrl + dlm.getDocThumbnail());
+			}
+			
 			DocumentLinksMediaBO exBO = mapper.fromEntityToBO(dlm);
 			resDlmList.add(exBO);
 		}
@@ -64,6 +79,10 @@ public class DocumentLinksMediaServiceImpl implements DocumentLinksMediaService 
 		boolean addTotal = true;
 		for(DocumentLinksMedia ann:exList){
 			DocumentLinksMediaBO exBO = mapper.fromEntityToBO(ann);
+			if(exBO.getDocThumbnail() != null && exBO.getDocThumbnail().length() > 0){
+				exBO.setDocThumbnail(instanceAdminAppUrl + exBO.getDocThumbnail());
+			}
+			
 			if(addTotal){
 				exBO.setTotal(total);
 				addTotal = false;
